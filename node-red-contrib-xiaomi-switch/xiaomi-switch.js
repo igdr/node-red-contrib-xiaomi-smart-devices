@@ -19,8 +19,8 @@ module.exports = function(RED) {
                 // var payload = JSON.parse(msg);
                 var payload = msg.payload;
 
-                if (payload.sid == node.sid && payload.model == "switch") {
-                    var data = JSON.parse(payload.data)
+                if (payload.sid == node.sid && payload.model.indexOf("switch") >= 0) {
+                    var data = JSON.parse(payload.data);
 
                     if (data.voltage) {
                         if (data.voltage < 2500) {
