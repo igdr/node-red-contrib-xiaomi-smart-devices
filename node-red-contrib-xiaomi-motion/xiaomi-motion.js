@@ -21,8 +21,8 @@ module.exports = function(RED) {
                 // var payload = JSON.parse(msg);
                 var payload = msg.payload;
 
-                if (payload.sid == node.sid && payload.model == "motion") {
-                    var data = JSON.parse(payload.data)
+                if (payload.sid == node.sid && payload.model.indexOf("motion") >= 0) {
+                    var data = JSON.parse(payload.data);
 
                     // if (data.status && data.status == "open") {
                     //     node.status({fill:"green", shape:"dot", text:"open"});
