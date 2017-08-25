@@ -22,7 +22,7 @@ module.exports = function(RED) {
                 var payload = msg.payload;
                 node.log("Received message from: " + payload.model + " sid: " + payload.sid + " payload: " + payload.data);
 
-                if (payload.sid == node.sid && payload.model.indexOf("sensor_ht") >= 0) {
+                if (payload.sid == node.sid && (payload.model.indexOf("sensor_ht") >= 0 || payload.model.indexOf("weather") >= 0)) {
                     var data = JSON.parse(payload.data);
 
                     if (data.voltage) {
