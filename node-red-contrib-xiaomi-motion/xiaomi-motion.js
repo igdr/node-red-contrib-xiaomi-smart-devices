@@ -55,8 +55,8 @@ module.exports = function (RED) {
                             result.status = data.status;
                         }
                         if (data.lux) {
-                            result.lux = data.lux;
-                            persistent.lux = data.lux;
+                            result.lux = parseInt(data.lux);
+                            persistent.lux = parseInt(data.lux);
                         }
                         if (data.no_motion) {
                             result.status = "no_motion";
