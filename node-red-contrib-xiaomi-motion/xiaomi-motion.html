@@ -3,7 +3,7 @@
         category: 'xiaomi',
         color: '#3FADB5',
         defaults: {
-            gateway: {value:"", type:"xiaomi-configurator"},
+            gateway: {value: "", type: "xiaomi-configurator"},
             name: {value: ""},
             sid: {value: "", required: true},
             motionmsg: {value: ""},
@@ -11,14 +11,13 @@
             output: {value: "0"}
         },
         inputs: 1,
-        outputs: 2,
-        outputLabels: ["Status"],
+        outputs: 1,
         paletteLabel: "motion",
         icon: "motion-icon.png",
         label: function () {
             return this.name || "xiaomi-motion";
         },
-        oneditprepare: function() {
+        oneditprepare: function () {
             var node = this;
 
             // Get the config node id from the select box:
@@ -46,7 +45,7 @@
             }
             $('#node-input-sid').val(node.sid);
         },
-        oneditsave: function() {
+        oneditsave: function () {
             var node = this;
             node.sid = $("#node-input-sid").val();
         }
@@ -82,6 +81,10 @@
         <label for="node-input-nomotionmsg"><i class="fa fa-circle"></i> No motion msg</label>
         <input type="text" id="node-input-nomotionmsg">
     </div>
+
+
+
+
 </script>
 
 <script type="text/x-red" data-help-name="xiaomi-motion">
@@ -142,4 +145,8 @@
                     "status":"motion"
                }"
     }</pre></p>
+
+
+
+
 </script>
