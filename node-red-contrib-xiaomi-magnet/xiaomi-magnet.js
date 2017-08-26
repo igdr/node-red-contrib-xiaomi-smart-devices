@@ -1,4 +1,4 @@
-module.exports = function(RED) {
+module.exports = function (RED) {
     "use strict";
     var mustache = require("mustache");
 
@@ -11,70 +11,73 @@ module.exports = function(RED) {
         this.closemsg = config.closemsg;
 
         var node = this;
-        var state = "";
+        var persistent = {
+            'previous_status': null,
+            'voltage': null,
+            'voltage_level': null
+        };
 
-        // node.status({fill:"yellow", shape:"dot", text:"unknown state"});
-        node.status({fill:"grey",shape:"ring",text:"battery"});
+        //initial status
+        node.status({fill: "grey", shape: "ring", text: "battery"});
 
         if (this.gateway) {
-            node.on('input', function(msg) {
+            node.on('input', function (msg) {
                 // var payload = JSON.parse(msg);
                 var payload = msg.payload;
 
-                if (payload.sid == node.sid && payload.model.indexOf("magnet") >= 0) {
-                    var data = JSON.parse(payload.data)
+                if (payload.sid === node.sid && payload.model.indexOf("magnet") >= 0) {
+                    var result = null;
+                    var data = JSON.parse(payload.data);
 
-                    // if (data.status && data.status == "open") {
-                    //     node.status({fill:"green", shape:"dot", text:"open"});
-                    //     state = "open";
-                    // } else if (data.status && data.status == "close") {
-                    //     node.status({fill:"red", shape:"dot", text:"closed"});
-                    //     state = "closed";
-                    // }
-
+                    //battery status
                     if (data.voltage) {
+                        persistent.voltage = data.voltage;
                         if (data.voltage < 2500) {
-                            node.status({fill:"red",shape:"dot",text:"battery"});
+                            node.status({fill: "red", shape: "dot", text: "battery"});
+                            persistent.voltage_level = 'critical';
                         } else if (data.voltage < 2900) {
-                            node.status({fill:"yellow",shape:"dot",text:"battery"});
+                            node.status({fill: "yellow", shape: "dot", text: "battery"});
+                            persistent.voltage_level = 'middle';
                         } else {
-                            node.status({fill:"green",shape:"dot",text:"battery"});
+                            node.status({fill: "green", shape: "dot", text: "battery"});
+                            persistent.voltage_level = 'high';
                         }
                     }
 
-
-                    if (node.output == "0") {
-                        msg.payload = payload;
-                        node.send([msg]);
-                    } else if (node.output == "1") {
-                        var status = null;
+                    if (node.output === "0") {
+                        //raw data
+                        result = payload;
+                    } else if (node.output === "1") {
+                        //only values
+                        result = Object.assign({
+                            status: null
+                        }, persistent);
 
                         if (data.status) {
-                            status = {"payload": data.status};
+                            result.status = data.status;
                         }
-                        node.send([status]);
-                    } else if (node.output == "2") {
-                        var status = null;
-
-                        if (data.status === 'open') {
-                            status = {"payload": mustache.render(node.openmsg, data)}
+                    } else if (node.output === "2") {
+                        //template
+                        if (data.status && data.status === "open") {
+                            result = mustache.render(node.openmsg, data);
                         } else {
-                            status = {"payload": mustache.render(node.closemsg, data)}
+                            result = mustache.render(node.closemsg, data);
                         }
-                        node.send([status]);
+                    }
+
+                    msg.payload = result;
+                    node.send([msg]);
+
+                    //save previous state
+                    if (result.status) {
+                        persistent.previous_status = result.status;
                     }
                 }
             });
-
-            node.on("close", function() {
-            });
-
         } else {
-            // no gateway configured
+            node.status({fill: "red", shape: "ring", text: "No gateway configured"});
         }
-
     }
 
     RED.nodes.registerType("xiaomi-magnet", XiaomiMagnetNode);
-
-}
+};

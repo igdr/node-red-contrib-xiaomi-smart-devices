@@ -1,12 +1,6 @@
 module.exports = function (RED) {
     "use strict";
 
-    var persistent = {
-        'lux': null,
-        'voltage': null,
-        'voltage_level': null
-    };
-
     function XiaomiHtNode(config) {
         RED.nodes.createNode(this, config);
         this.gateway = RED.nodes.getNode(config.gateway);
@@ -16,7 +10,15 @@ module.exports = function (RED) {
         this.humidity = config.humidity;
 
         var node = this;
+        var persistent = {
+            'temperature': null,
+            'humidity': null,
+            'pressure': null,
+            'voltage': null,
+            'voltage_level': null
+        };
 
+        //initial status
         node.status({fill: "grey", shape: "ring", text: "battery"});
 
         if (this.gateway) {
@@ -44,7 +46,7 @@ module.exports = function (RED) {
 
                     //temperature
                     if (data.temperature) {
-                        persistent.temp = data.temperature;
+                        persistent.temperature = data.temperature;
                     }
 
                     //humidity
@@ -57,13 +59,16 @@ module.exports = function (RED) {
                         persistent.pressure = data.pressure;
                     }
 
-                    if (node.output == "0") {
+                    if (node.output === "0") {
+                        //raw data
                         result = payload;
-                    } else if (node.output == "1") {
+                    } else if (node.output === "1") {
+                        //values
                         result = persistent;
                     }
 
-                    node.send([{payload: result}]);
+                    msg.payload = result;
+                    node.send([msg]);
                 }
             });
         } else {

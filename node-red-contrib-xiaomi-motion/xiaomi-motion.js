@@ -13,6 +13,7 @@ module.exports = function (RED) {
         var node = this;
         var persistent = {
             'lux': null,
+            'previous_status': null,
             'voltage': null,
             'voltage_level': null
         };
@@ -27,6 +28,7 @@ module.exports = function (RED) {
                     var result = null;
                     var data = JSON.parse(payload.data);
 
+                    //battery status
                     if (data.voltage) {
                         persistent.voltage = data.voltage;
 
@@ -42,9 +44,16 @@ module.exports = function (RED) {
                         }
                     }
 
+                    //lux
+                    if (data.lux) {
+                        persistent.lux = parseInt(data.lux);
+                    }
+
                     if (node.output === "0") {
+                        //raw data
                         result = payload;
                     } else if (node.output === "1") {
+                        //values
                         result = Object.assign({
                             status: null,
                             duration: null,
@@ -54,15 +63,12 @@ module.exports = function (RED) {
                         if (data.status) {
                             result.status = data.status;
                         }
-                        if (data.lux) {
-                            result.lux = parseInt(data.lux);
-                            persistent.lux = parseInt(data.lux);
-                        }
                         if (data.no_motion) {
                             result.status = "no_motion";
                             result.duration = data.no_motion;
                         }
                     } else if (node.output === "2") {
+                        //template
                         if (data.status === 'motion') {
                             result = mustache.render(node.motionmsg, data);
                         } else {
@@ -72,6 +78,11 @@ module.exports = function (RED) {
 
                     msg.payload = result;
                     node.send([msg]);
+
+                    //save previous state
+                    if (result.status) {
+                        persistent.previous_status = result.status;
+                    }
                 }
             });
         } else {

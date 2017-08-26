@@ -1,4 +1,4 @@
-module.exports = function(RED) {
+module.exports = function (RED) {
     "use strict";
     var mustache = require("mustache");
 
@@ -11,62 +11,68 @@ module.exports = function(RED) {
         this.outmsgdbcl = config.outmsgdbcl;
 
         var node = this;
+        var persistent = {
+            'voltage': null,
+            'voltage_level': null
+        };
 
-        node.status({fill:"grey",shape:"ring",text:"battery"});
+        //initial status
+        node.status({fill: "grey", shape: "ring", text: "battery"});
 
         if (this.gateway) {
-            node.on('input', function(msg) {
-                // var payload = JSON.parse(msg);
+            node.on('input', function (msg) {
                 var payload = msg.payload;
 
-                if (payload.sid == node.sid && payload.model.indexOf("switch") >= 0) {
+                if (payload.sid === node.sid && payload.model.indexOf("switch") >= 0) {
+                    var result = null;
                     var data = JSON.parse(payload.data);
 
+                    //battery status
                     if (data.voltage) {
+                        persistent.voltage = data.voltage;
                         if (data.voltage < 2500) {
-                            node.status({fill:"red",shape:"dot",text:"battery"});
+                            node.status({fill: "red", shape: "dot", text: "battery"});
+                            persistent.voltage_level = 'critical';
                         } else if (data.voltage < 2900) {
-                            node.status({fill:"yellow",shape:"dot",text:"battery"});
+                            node.status({fill: "yellow", shape: "dot", text: "battery"});
+                            persistent.voltage_level = 'middle';
                         } else {
-                            node.status({fill:"green",shape:"dot",text:"battery"});
+                            node.status({fill: "green", shape: "dot", text: "battery"});
+                            persistent.voltage_level = 'high';
                         }
                     }
 
-                    if (node.output == "0") {
-                        msg.payload = payload;
-                        node.send([msg]);
-                    } else if (node.output == "1") {
-                        var status = null;
+                    if (node.output === "0") {
+                        //raw data
+                        result = payload;
+                    } else if (node.output === "1") {
+                        //only values
+                        result = Object.assign({
+                            status: null
+                        }, persistent);
 
                         if (data.status) {
-                            status = {"payload": data.status};
+                            result.status = data.status;
                         }
-                        node.send([status]);
-                    } else if (node.output == "2") {
-                        var status = null;
-
-                        if (data.status && data.status == "click") {
-                            status = {"payload": mustache.render(node.outmsg, data)}
-                            node.send([[status],[]]);
+                    } else if (node.output === "2") {
+                        //template
+                        if (data.status && data.status === "click") {
+                            result = mustache.render(node.outmsg, data);
                         }
 
-                        if (data.status && data.status == "double_click") {
-                            status = {"payload": mustache.render(node.outmsgdbcl, data)}
-                            node.send([[],[status]]);
+                        if (data.status && data.status === "double_click") {
+                            result = mustache.render(node.outmsgdbcl, data);
                         }
                     }
+
+                    msg.payload = result;
+                    node.send([msg]);
                 }
             });
-
-            node.on("close", function() {
-            });
-
         } else {
-            // no gateway configured
+            node.status({fill: "red", shape: "ring", text: "No gateway configured"});
         }
-
     }
 
     RED.nodes.registerType("xiaomi-switch", XiaomiSwitchNode);
-
-}
+};

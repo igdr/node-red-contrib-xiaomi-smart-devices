@@ -3,22 +3,21 @@
         category: 'xiaomi',
         color: '#3FADB5',
         defaults: {
-            gateway: {value:"", type:"xiaomi-configurator"},
+            gateway: {value: "", type: "xiaomi-configurator"},
             name: {value: ""},
             sid: {value: "", required: true},
             outmsg: {value: "{{click}}"},
             outmsgdbcl: {value: "{{double_click}}"},
-            output: {value: "0"}
+            output: {value: "1"}
         },
         inputs: 1,
-        outputs: 2,
-        outputLabels: ["Single-click", "Double-click"],
+        outputs: 1,
         paletteLabel: "switch",
         icon: "light-icon.png",
         label: function () {
             return this.name || "xiaomi-switch";
         },
-        oneditprepare: function() {
+        oneditprepare: function () {
             var node = this;
 
             // Get the config node id from the select box:
@@ -37,10 +36,6 @@
             $(".node-input-msg").hide();
             $("#node-input-output").val(node.output);
 
-            $("#node-input-gateway").change(function () {
-
-            });
-
             for (key in configNode.deviceList) {
                 var device = configNode.deviceList[key];
                 if (device.model === "switch") {
@@ -49,7 +44,7 @@
             }
             $('#node-input-sid').val(node.sid);
         },
-        oneditsave: function() {
+        oneditsave: function () {
             var node = this;
             node.sid = $("#node-input-sid").val();
         }
@@ -90,30 +85,6 @@
 <script type="text/x-red" data-help-name="xiaomi-switch">
     <p>The Xiaomi Switch node</p>
 
-    <h3>Inputs</h3>
-    <dl class="message-properties">
-        <dt>payload
-            <span class="property-type">json</span>
-        </dt>
-        <dd>Gateway <code>switch</code> message of type <code>read_ack</code>, <code>heartbeat</code> or <code>report</code></dd>
-    </dl>
-
-    <h3>Outputs</h3>
-    <ol class="node-ports">
-        <li>Single click output
-            <dl class="message-properties">
-                <dt>payload <span class="property-type">string | json</span></dt>
-                <dd>raw data, value or template.</dd>
-            </dl>
-        </li>
-        <li>Double click output
-            <dl class="message-properties">
-                <dt>payload <span class="property-type">string | json</span></dt>
-                <dd>raw data, value or template.</dd>
-            </dl>
-        </li>
-    </ol>
-
     <h3>Details</h3>
     <p>The incoming json message is parsed if the type model is <code>switch</code> and
      the <code>sid</code> matches the configured value for this device.</p>
@@ -125,6 +96,15 @@
         </ul>
     </p>
 
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">json</span>
+        </dt>
+        <dd>Gateway <code>switch</code> message of type <code>read_ack</code>, <code>heartbeat</code> or <code>report</code></dd>
+    </dl>
+
+    <h3>Outputs</h3>
     <h4>Full data</h4>
     <p>Passes the complete json object received from the gateway on output 1. Use this if you need the raw data.</p>
     <h4>Just values</h4>
@@ -140,9 +120,10 @@
         model: "switch"
         sid: "158d000128b124"
         short_id: 56773
-        data: "{
-                    "status":"click"
-               }"
+        data: {
+            "status":"click"
+            "voltage": 3000,
+            "voltage_level": "high"
+        }
     }</pre></p>
-
 </script>
