@@ -8,7 +8,7 @@
             sid: {value: "", required: true},
             motionmsg: {value: ""},
             nomotionmsg: {value: ""},
-            output: {value: "0"}
+            output: {value: "1"}
         },
         inputs: 1,
         outputs: 1,
@@ -81,14 +81,20 @@
         <label for="node-input-nomotionmsg"><i class="fa fa-circle"></i> No motion msg</label>
         <input type="text" id="node-input-nomotionmsg">
     </div>
-
-
-
-
 </script>
 
 <script type="text/x-red" data-help-name="xiaomi-motion">
     <p>The Xiaomi body motion sensor node</p>
+
+    <h3>Details</h3>
+    <p>The incoming json message is parsed if the type model is <code>motion</code> and the <code>sid</code> matches the configured value for this device.</p>
+    <p>Three output types are supported for output 1:
+        <ul>
+            <li>Full data</li>
+            <li>Just values</li>
+            <li>Template</li>
+        </ul>
+    </p>
 
     <h3>Inputs</h3>
     <dl class="message-properties">
@@ -99,32 +105,6 @@
     </dl>
 
     <h3>Outputs</h3>
-    <ol class="node-ports">
-        <li>Motion output
-            <dl class="message-properties">
-                <dt>payload <span class="property-type">string | json</span></dt>
-                <dd>raw data, value or template.</dd>
-            </dl>
-        </li>
-        <li>Duration output
-            <dl class="message-properties">
-                <dt>payload <span class="property-type">json</span></dt>
-                <dd>raw data</dd>
-            </dl>
-        </li>
-    </ol>
-
-    <h3>Details</h3>
-    <p>The incoming json message is parsed if the type model is <code>motion</code> and
-     the <code>sid</code> matches the configured value for this device.</p>
-    <p>Three output types are supported for output 1:
-        <ul>
-            <li>Full data</li>
-            <li>Just values</li>
-            <li>Template</li>
-        </ul>
-    </p>
-
     <h4>Full data</h4>
     <p>Passes the complete json object received from the gateway. Use this if you need the raw data.</p>
     <h4>Just values</h4>
@@ -145,6 +125,8 @@
                     "status":"motion"
                }"
     }</pre></p>
+
+
 
 
 

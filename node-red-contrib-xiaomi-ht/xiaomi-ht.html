@@ -3,22 +3,19 @@
         category: 'xiaomi',
         color: '#3FADB5',
         defaults: {
-            gateway: {value:"", type:"xiaomi-configurator"},
+            gateway: {value: "", type: "xiaomi-configurator"},
             name: {value: ""},
             sid: {value: "", required: true},
-            temperature: {value: "{{temperature}}"},
-            humidity: {value: "{{humidity}}"},
-            output: {value: "0"}
+            output: {value: "1"}
         },
         inputs: 1,
-        outputs: 2,
-        outputLabels: ["Temperature","Humidity"],
+        outputs: 1,
         paletteLabel: "sensor HT",
         icon: "thermometer-icon.png",
         label: function () {
             return this.name || "xiaomi-ht";
         },
-        oneditprepare: function() {
+        oneditprepare: function () {
             var node = this;
 
             // Get the config node id from the select box:
@@ -26,20 +23,8 @@
             // Get the config node using the ID:
             var configNode = RED.nodes.node(configNodeID);
 
-            $("#node-input-output").change(function () {
-                if ($(this).val() == "2") {
-                    $(".node-input-msg").show();
-                } else {
-                    $(".node-input-msg").hide();
-                }
-            });
-
-            $(".node-input-msg").hide();
+            //output
             $("#node-input-output").val(node.output);
-
-            $("#node-input-gateway").change(function () {
-
-            });
 
             for (key in configNode.deviceList) {
                 var device = configNode.deviceList[key];
@@ -49,7 +34,7 @@
             }
             $('#node-input-sid').val(node.sid);
         },
-        oneditsave: function() {
+        oneditsave: function () {
             var node = this;
             node.sid = $("#node-input-sid").val();
         }
@@ -69,30 +54,27 @@
         <label for="node-input-sid"><i class="icon-tag"></i> Device</label>
         <select id="node-input-sid" placeholder="xiaomi gateway"></select>
     </div>
-    <!--<div class="form-row">-->
-        <!--<label for="node-input-sid"><i class="fa fa-id-badge"></i> Device SID</label>-->
-        <!--<input type="text" id="node-input-sid">-->
-    <!--</div>-->
     <div class="form-row">
         <label for="node-input-output"><i class="icon-tag"></i> Output</label>
         <select id="node-input-output" style="width:70%;">
             <option value="0">Full data</option>
             <option value="1">Just values</option>
-            <option value="2">Template</option>
         </select>
     </div>
-    <div class="form-row node-input-msg">
-        <label for="node-input-temperature"><i class="fa fa-thermometer-three-quarters"></i> Temperature</label>
-        <input type="text" id="node-input-temperature">
-    </div>
-    <div class="form-row node-input-msg">
-        <label for="node-input-humidity"><i class="fa fa-mixcloud"></i> Humidity</label>
-        <input type="text" id="node-input-humidity">
-    </div>
+
 </script>
 
 <script type="text/x-red" data-help-name="xiaomi-ht">
     <p>The Xiaomi Humidity & Temperature sensor node</p>
+
+    <h3>Details</h3>
+    <p>The incoming json message is parsed if the type model is <code>sensor_ht</code> and the <code>sid</code> matches the configured value for this device.</p>
+    <p>Three output types are supported:
+        <ul>
+            <li>Full data</li>
+            <li>Just values</li>
+        </ul>
+    </p>
 
     <h3>Inputs</h3>
     <dl class="message-properties">
@@ -103,39 +85,11 @@
     </dl>
 
     <h3>Outputs</h3>
-    <ol class="node-ports">
-        <li>Temperature output
-            <dl class="message-properties">
-                <dt>payload <span class="property-type">string | json</span></dt>
-                <dd>raw data, value or template.</dd>
-            </dl>
-        </li>
-        <li>Humidity output
-            <dl class="message-properties">
-                <dt>payload <span class="property-type">string | json</span></dt>
-                <dd>raw data, value or template.</dd>
-            </dl>
-        </li>
-    </ol>
-
-    <h3>Details</h3>
-    <p>The incoming json message is parsed if the type model is <code>sensor_ht</code> and
-     the <code>sid</code> matches the configured value for this device.</p>
-    <p>Three output types are supported:
-        <ul>
-            <li>Full data</li>
-            <li>Just values</li>
-            <li>Template</li>
-        </ul>
-    </p>
-
     <h4>Full data</h4>
     <p>Passes the complete json object received from the gateway on output 1. Use this if you need the raw data.</p>
+
     <h4>Just values</h4>
-    <p>Only passes the string values for temperature on output 1 and humidity on output 2.</p>
-    <h4>Template</h4>
-    <p>Use your own template to pass the values on. The template can contain <a href="http://mustache.github.io/mustache.5.html">mustache-style</a> tags.
-        Any property from the data section of the full object can be used.</p>
+    <p>Only passes the data object with values (temperature, humidity, voltage, voltage_level, pressure) on output 1.</p>
 
     <p>Sample message:</p>
     <p><pre>
@@ -150,5 +104,4 @@
                     "humidity":"5699"
                }"
     }</pre></p>
-
 </script>

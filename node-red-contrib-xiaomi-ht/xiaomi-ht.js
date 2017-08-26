@@ -1,8 +1,7 @@
-module.exports = function(RED) {
+module.exports = function (RED) {
     "use strict";
     var mustache = require("mustache");
     var udpInputPortsInUse = {};
-    var dgram = require('dgram');
 
     function XiaomiHtNode(config) {
         RED.nodes.createNode(this, config);
@@ -14,10 +13,10 @@ module.exports = function(RED) {
 
         var node = this;
 
-        node.status({fill:"grey",shape:"ring",text:"battery"});
+        node.status({fill: "grey", shape: "ring", text: "battery"});
 
         if (this.gateway) {
-            node.on('input', function(msg) {
+            node.on('input', function (msg) {
                 // var payload = JSON.parse(msg);
                 var payload = msg.payload;
                 node.log("Received message from: " + payload.model + " sid: " + payload.sid + " payload: " + payload.data);
@@ -27,11 +26,11 @@ module.exports = function(RED) {
 
                     if (data.voltage) {
                         if (data.voltage < 2500) {
-                            node.status({fill:"red",shape:"dot",text:"battery"});
+                            node.status({fill: "red", shape: "dot", text: "battery"});
                         } else if (data.voltage < 2900) {
-                            node.status({fill:"yellow",shape:"dot",text:"battery"});
+                            node.status({fill: "yellow", shape: "dot", text: "battery"});
                         } else {
-                            node.status({fill:"green",shape:"dot",text:"battery"});
+                            node.status({fill: "green", shape: "dot", text: "battery"});
                         }
                     }
 
@@ -66,7 +65,7 @@ module.exports = function(RED) {
                 }
             });
 
-            node.on("close", function() {
+            node.on("close", function () {
             });
 
         } else {
