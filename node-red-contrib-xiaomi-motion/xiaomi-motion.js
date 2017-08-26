@@ -11,14 +11,14 @@ module.exports = function (RED) {
         this.nomotionmsg = config.nomotionmsg;
 
         var node = this;
+        var statusTemplate = 'Battery: {{voltage}}V ({{voltage_level}}), Lux: {{lux}}';
         var persistent = {
             'lux': null,
             'voltage': null,
             'voltage_level': null
         };
 
-        node.status({fill: "grey", shape: "ring", text: "battery"});
-
+        node.status({fill: "grey", shape: "ring", text: "connection..."});
         if (this.gateway) {
             node.on('input', function (msg) {
                 var payload = msg.payload;
@@ -29,18 +29,19 @@ module.exports = function (RED) {
 
                     if (data.voltage) {
                         persistent.voltage = data.voltage;
-
                         if (data.voltage < 2500) {
-                            node.status({fill: "red", shape: "dot", text: "battery"});
                             persistent.voltage_level = 'critical';
                         } else if (data.voltage < 2900) {
-                            node.status({fill: "yellow", shape: "dot", text: "battery"});
                             persistent.voltage_level = 'middle';
                         } else {
-                            node.status({fill: "green", shape: "dot", text: "battery"});
                             persistent.voltage_level = 'high';
                         }
                     }
+                    if (data.lux) {
+                        persistent.lux = parseInt(data.lux);
+                    }
+
+                    node.status({fill: "red", shape: "dot", text: mustache.render(statusTemplate, persistent)});
 
                     if (node.output === "0") {
                         result = payload;
@@ -53,10 +54,6 @@ module.exports = function (RED) {
 
                         if (data.status) {
                             result.status = data.status;
-                        }
-                        if (data.lux) {
-                            result.lux = parseInt(data.lux);
-                            persistent.lux = parseInt(data.lux);
                         }
                         if (data.no_motion) {
                             result.status = "no_motion";
