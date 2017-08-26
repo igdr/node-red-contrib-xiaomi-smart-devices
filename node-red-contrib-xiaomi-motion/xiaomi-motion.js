@@ -74,13 +74,8 @@ module.exports = function (RED) {
                     node.send([msg]);
                 }
             });
-
-            node.on("close", function () {
-                // empty
-            });
-
         } else {
-            // no gateway configured
+            node.status({fill: "red", shape: "ring", text: "No gateway configured"});
         }
     }
 

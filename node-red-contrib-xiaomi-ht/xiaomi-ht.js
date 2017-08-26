@@ -1,7 +1,11 @@
 module.exports = function (RED) {
     "use strict";
-    var mustache = require("mustache");
-    var udpInputPortsInUse = {};
+
+    var persistent = {
+        'lux': null,
+        'voltage': null,
+        'voltage_level': null
+    };
 
     function XiaomiHtNode(config) {
         RED.nodes.createNode(this, config);
@@ -17,63 +21,56 @@ module.exports = function (RED) {
 
         if (this.gateway) {
             node.on('input', function (msg) {
-                // var payload = JSON.parse(msg);
                 var payload = msg.payload;
-                node.log("Received message from: " + payload.model + " sid: " + payload.sid + " payload: " + payload.data);
 
-                if (payload.sid == node.sid && (payload.model.indexOf("sensor_ht") >= 0 || payload.model.indexOf("weather") >= 0)) {
+                if (payload.sid === node.sid && (payload.model.indexOf("sensor_ht") >= 0 || payload.model.indexOf("weather") >= 0)) {
+                    var result = null;
                     var data = JSON.parse(payload.data);
 
+                    //battery status
                     if (data.voltage) {
+                        persistent.voltage = data.voltage;
                         if (data.voltage < 2500) {
                             node.status({fill: "red", shape: "dot", text: "battery"});
+                            persistent.voltage_level = 'critical';
                         } else if (data.voltage < 2900) {
                             node.status({fill: "yellow", shape: "dot", text: "battery"});
+                            persistent.voltage_level = 'middle';
                         } else {
                             node.status({fill: "green", shape: "dot", text: "battery"});
+                            persistent.voltage_level = 'high';
                         }
+                    }
+
+                    //temperature
+                    if (data.temperature) {
+                        persistent.temp = data.temperature;
+                    }
+
+                    //humidity
+                    if (data.humidity) {
+                        persistent.humidity = data.humidity;
+                    }
+
+                    //pressure
+                    if (data.pressure) {
+                        persistent.pressure = data.pressure;
                     }
 
                     if (node.output == "0") {
-                        msg.payload = payload;
-                        node.send([msg]);
+                        result = payload;
                     } else if (node.output == "1") {
-                        var temp = null;
-                        var humidity = null;
-
-                        if (data.temperature) {
-                            temp = {"payload": data.temperature};
-                        }
-
-                        if (data.humidity) {
-                            humidity = {"payload": data.humidity};
-                        }
-                        node.send([temp, humidity]);
-                    } else if (node.output == "2") {
-                        var temp = null;
-                        var humidity = null;
-
-                        if (data.temperature) {
-                            temp = {"payload": mustache.render(node.temperature, data)}
-                        }
-
-                        if (data.humidity) {
-                            humidity = {"payload": mustache.render(node.humidity, data)}
-                        }
-                        node.send([temp, humidity]);
+                        result = persistent;
                     }
+
+                    node.send([{payload: result}]);
                 }
             });
-
-            node.on("close", function () {
-            });
-
         } else {
-            // no gateway configured
+            node.status({fill: "red", shape: "ring", text: "No gateway configured"});
         }
 
     }
 
     RED.nodes.registerType("xiaomi-ht", XiaomiHtNode);
-
-}
+};
