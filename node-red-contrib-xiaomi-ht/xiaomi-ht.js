@@ -46,12 +46,12 @@ module.exports = function (RED) {
 
                     //temperature
                     if (data.temperature) {
-                        persistent.temperature = data.temperature / 1000;
+                        persistent.temperature = data.temperature / 100;
                     }
 
                     //humidity
                     if (data.humidity) {
-                        persistent.humidity = data.humidity / 1000;
+                        persistent.humidity = data.humidity / 100;
                     }
 
                     //pressure
