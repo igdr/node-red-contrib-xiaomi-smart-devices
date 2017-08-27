@@ -31,11 +31,11 @@ module.exports = function (RED) {
 
                     //battery status
                     if (data.voltage) {
-                        persistent.voltage = data.voltage;
-                        if (data.voltage < 2500) {
+                        persistent.voltage = data.voltage / 1000;
+                        if (data.voltage < 2.5) {
                             node.status({fill: "red", shape: "dot", text: "battery"});
                             persistent.voltage_level = 'critical';
-                        } else if (data.voltage < 2900) {
+                        } else if (data.voltage < 2.9) {
                             node.status({fill: "yellow", shape: "dot", text: "battery"});
                             persistent.voltage_level = 'middle';
                         } else {
