@@ -9,9 +9,9 @@ module.exports = function (RED) {
         var node = this;
 
         this.getDeviceName = function (sid) {
-            for (var device in this.deviceList) {
-                if (device.sid === sid) {
-                    return device.desc;
+            for (var i in this.deviceList) {
+                if (this.deviceList[i].sid === sid) {
+                    return this.deviceList[i].desc;
                 }
             }
 
