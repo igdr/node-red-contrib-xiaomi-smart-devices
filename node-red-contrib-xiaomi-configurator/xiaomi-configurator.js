@@ -9,7 +9,13 @@ module.exports = function (RED) {
         var node = this;
 
         this.getDeviceName = function (sid) {
-            return deviceList[sid].desc;
+            for (var device in this.deviceList) {
+                if (device.sid === sid) {
+                    return device.desc;
+                }
+            }
+
+            return null;
         }
     }
 
