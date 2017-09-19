@@ -67,6 +67,8 @@ module.exports = function (RED) {
                             result.status = "no_motion";
                             result.duration = data.no_motion;
                         }
+
+                        result.device = self.gateway.getDeviceName(self.sid);
                     } else if (node.output === "2") {
                         //template
                         if (data.status === 'motion') {
@@ -76,7 +78,6 @@ module.exports = function (RED) {
                         }
                     }
 
-                    msg.device = self.gateway.getDeviceName(self.sid);
                     msg.payload = result;
                     node.send([msg]);
 
