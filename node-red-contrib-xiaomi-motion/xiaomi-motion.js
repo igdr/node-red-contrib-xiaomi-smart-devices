@@ -68,6 +68,7 @@ module.exports = function (RED) {
                             result.duration = data.no_motion;
                         }
 
+                        result.tc = new Date().getTime();
                         result.device = self.gateway.getDeviceName(self.sid);
                     } else if (node.output === "2") {
                         //template

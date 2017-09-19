@@ -21,6 +21,7 @@ module.exports = function (RED) {
         node.status({fill: "grey", shape: "ring", text: "battery"});
 
         if (this.gateway) {
+            var self = this;
             node.on('input', function (msg) {
                 // var payload = JSON.parse(msg);
                 var payload = msg.payload;
@@ -56,6 +57,9 @@ module.exports = function (RED) {
                         if (data.status) {
                             result.status = data.status;
                         }
+
+                        result.tc = new Date().getTime();
+                        result.device = self.gateway.getDeviceName(self.sid);
                     } else if (node.output === "2") {
                         //template
                         if (data.status && data.status === "open") {

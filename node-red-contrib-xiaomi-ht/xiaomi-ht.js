@@ -22,6 +22,7 @@ module.exports = function (RED) {
         node.status({fill: "grey", shape: "ring", text: "battery"});
 
         if (this.gateway) {
+            var self = this;
             node.on('input', function (msg) {
                 var payload = msg.payload;
 
@@ -65,6 +66,9 @@ module.exports = function (RED) {
                     } else if (node.output === "1") {
                         //values
                         result = persistent;
+
+                        result.tc = new Date().getTime();
+                        result.device = self.gateway.getDeviceName(self.sid);
                     }
 
                     msg.payload = result;
