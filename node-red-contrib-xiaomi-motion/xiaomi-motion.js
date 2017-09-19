@@ -76,7 +76,7 @@ module.exports = function (RED) {
                         }
                     }
 
-                    msg.device  = self.gateway.getDeviceName(self.sid);
+                    msg.device = self.gateway.getDeviceName(self.sid);
                     msg.payload = result;
                     node.send([msg]);
 
