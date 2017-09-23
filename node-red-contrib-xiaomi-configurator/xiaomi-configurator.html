@@ -17,6 +17,7 @@
             var tw_motion = {value:"motion", label:"motion", icon:"icons/node-red/motion-tw-icon.png"};
             var tw_plug = {value:"plug", label:"plug", icon:"icons/node-red/plug-tw-icon.png"};
             var tw_switch = {value:"switch", label:"switch", icon:"icons/node-red/switch-tw-icon.png"};
+            var tw_cube = {value:"cube", label:"cube", icon:"icons/node-red/cube-tw-icon.png"};
 
             $("#node-config-input-devices").css('min-height','250px').css('min-width','450px').editableList({
                 addItem: function(container, i, device) {
@@ -29,7 +30,7 @@
                     var sid = $('<input/>',{id:"node-config-input-sid-"+i,type:"text", placeholder:"SID", style:"width:auto;vertical-align:top"}).appendTo(row);
                     sid.typedInput({
                         default: 'sensor_ht',
-                        types: [tw_sensor_ht, tw_magnet, tw_motion, tw_plug, tw_switch]
+                        types: [tw_sensor_ht, tw_magnet, tw_motion, tw_plug, tw_switch, tw_cube]
                     });
 
                     $('<label/>',{for:"node-config-input-desc-"+i, style:"margin-left: 7px; width: 20px;vertical-align:middle"}).html('<i class="fa fa-pencil-square-o"></i>').appendTo(row);
