@@ -3,7 +3,7 @@ var battery = require('../common/battery');
 module.exports = function (RED) {
     "use strict";
 
-    function XiaomiHtNode(config) {
+    function XiaomiTemperatureHumiditySensorNode(config) {
         RED.nodes.createNode(this, config);
         this.gateway = RED.nodes.getNode(config.gateway);
         this.sid = config.sid;
@@ -77,5 +77,5 @@ module.exports = function (RED) {
 
     }
 
-    RED.nodes.registerType("xiaomi-ht", XiaomiHtNode);
+    RED.nodes.registerType("xiaomi-temperature-humidity-sensor", XiaomiTemperatureHumiditySensorNode);
 };

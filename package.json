@@ -1,6 +1,6 @@
 {
     "name": "node-red-contrib-xiaomi-smart-devices",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "Xiaomi Home Automation for NodeRed",
     "repository": {
         "type": "git",
@@ -13,9 +13,10 @@
     ],
     "node-red": {
         "nodes": {
-            "xiaomi-ht": "ht/xiaomi-ht.js",
+            "xiaomi-human-body-sensor": "motion/human-body-sensor/human-body-sensor.js",
+            "xiaomi-temperature-humidity-sensor": "temperature-humidity-sensor/temperature-humidity-sensor.js",
+
             "xiaomi-magnet": "magnet/xiaomi-magnet.js",
-            "xiaomi-motion": "motion/xiaomi-motion.js",
             "xiaomi-button": "button/xiaomi-button.js",
             "xiaomi-wall-switch": "wall-switch/wall-xiaomi-switch.js",
             "xiaomi-water-leak": "water-leak/xiaomi-water-leak.js",
