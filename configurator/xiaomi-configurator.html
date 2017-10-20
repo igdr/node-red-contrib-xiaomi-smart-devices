@@ -1,0 +1,142 @@
+<script type="text/javascript">
+    RED.nodes.registerType('xiaomi-configurator', {
+        category: 'config',
+        defaults: {
+            name: {value: ""},
+            deviceList: {value: [{sid: "", desc: "", model: "plug"}]},
+            key: {value: ""}
+        },
+        label: function () {
+            return this.name || "xiaomi-configurator";
+        },
+        oneditprepare: function () {
+            var node = this,
+                deviceInput = $("#node-config-input-devices");
+
+            var types = [{
+                value: "sensor_ht",
+                label: "ht sensor",
+                icon: "icons/node-red/sensor-ht-tw-icon.png"
+            }, {
+                value: "magnet",
+                label: "door sensor",
+                icon: "icons/node-red/magnet-tw-icon.png"
+            }, {
+                value: "motion",
+                label: "motion sensor",
+                icon: "icons/node-red/motion-tw-icon.png"
+            }, {
+                value: "plug",
+                label: "plug socket",
+                icon: "icons/node-red/plug-tw-icon.png"
+            }, {
+                value: "switch",
+                label: "switch button",
+                icon: "icons/node-red/switch-tw-icon.png"
+            }, {
+                value: "cube",
+                label: "cube controll",
+                icon: "icons/node-red/cube-tw-icon.png"
+            }, {
+                value: "water-leak",
+                label: "water leak sensor",
+                icon: "icons/node-red/water-leak-tw-icon.png"
+            }];
+
+            deviceInput.css('min-height', '250px').css('min-width', '600px').editableList({
+                addItem: function (container, i, device) {
+                    if (!device.hasOwnProperty('model')) {
+                        device.model = 'sensor_ht';
+                    }
+                    var row = $('<div/>').appendTo(container);
+
+                    $('<label/>', {for: "node-config-input-sid-" + i, style: "margin-left: 3px; width: 15px;vertical-align:middle"}).appendTo(row);
+                    var sid = $('<input/>', {id: "node-config-input-sid-" + i, type: "text", placeholder: "SID", style: "width:auto;vertical-align:top"}).appendTo(row);
+                    sid.typedInput({
+                        default: 'sensor_ht',
+                        types: types
+                    });
+
+                    $('<label/>', {for: "node-config-input-desc-" + i, style: "margin-left: 7px; width: 20px;vertical-align:middle"}).html('<i class="fa fa-pencil-square-o"></i>').appendTo(row);
+                    var desc = $('<input/>', {id: "node-config-input-desc-" + i, type: "text", placeholder: "description", style: "width:auto;vertical-align:top"}).appendTo(row);
+
+                    sid.typedInput('value', device.sid);
+                    sid.typedInput('type', device.model);
+                    desc.val(device.desc);
+                },
+                resize: function () {
+                },
+                removeItem: function (opt) {
+                },
+                sortItems: function (rules) {
+                },
+                sortable: true,
+                removable: true
+            });
+
+            for (var i = 0; i < this.deviceList.length; i++) {
+                var device = this.deviceList[i];
+                deviceInput.editableList('addItem', device);
+            }
+            var listHeight = deviceInput.editableList('items').size() * 51 + 50;
+            deviceInput.editableList('height', listHeight);
+        },
+        oneditsave: function () {
+            var devices = ct.editableList('items');
+            var node = this;
+            var devicesArray = [];
+            devices.each(function (i) {
+                var deviceElement = $(this);
+                var sid = deviceElement.find("#node-config-input-sid-" + i).val();
+                var desc = deviceElement.find("#node-config-input-desc-" + i).val();
+                var model = deviceElement.find("#node-config-input-sid-" + i).typedInput('type');
+                var d = {};
+                d['sid'] = sid;
+                d['desc'] = desc;
+                d['model'] = model;
+                devicesArray.push(d);
+            });
+            node.deviceList = devicesArray;
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="xiaomi-configurator">
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-config-input-name" placeholder="Name">
+    </div>
+        <div class="form-row">
+        <label for="node-config-input-key"><i class="fa fa-ticket"></i> Key/Password</label>
+        <input type="text" id="node-config-input-key" placeholder="Key">
+    </div>
+    <div class="form-row node-config-input-devices">
+        <ol id="node-config-input-devices"></ol>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="xiaomi-configurator">
+    <p>Device configuration for Xiaomi nodes.</p>
+    <h3>Details</h3>
+    <p>This configuration node is used by the Xiaomi device nodes. Here you can add
+    devices with their device-id (SID), type and a description.</p>
+    <p>At the moment the following devices are supported:
+    <lu>
+        <li>Humidity & Temperature sensor</li>
+        <li>Body motion sensor</li>
+        <li>Cube controll</li>
+        <li>Water leak sensor</li>
+        <li>Magnet contact sensor</li>
+        <li>Wall socket plug (zigbee)</li>
+        <li>Push button</li>
+        <li>Wall switch</li>
+    </lu>
+    </p>
+    <p>To be able to receive messages from the Xiaomi gateway, you need to set the gateway
+    in developer mode. Once in developer mode, the gateway sends JSON messages over the network as
+    UDP packages. On the internet their are a lot of guides on how to put the gateway in developer mode.</p>
+    <p>If you want to use the wall sockets, you need to set the key from the gateway. The key can be
+    retrieved via the Xiaomi Home App when in developer mode. Enter the key here and it is used
+    together with the token from the gateway's heartbeat message to recalculate the key to switch
+    the plug. If you do not specify a key, the plug-node can not be used.</p>
+</script>

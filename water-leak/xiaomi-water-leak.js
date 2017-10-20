@@ -2,67 +2,65 @@ module.exports = function (RED) {
     "use strict";
     var mustache = require("mustache");
 
-    function XiaomicubeNode(config) {
+    function XiaomiMagnetNode(config) {
         RED.nodes.createNode(this, config);
         this.gateway = RED.nodes.getNode(config.gateway);
         this.sid = config.sid;
         this.output = config.output;
+        this.openmsg = config.openmsg;
+        this.closemsg = config.closemsg;
 
         var node = this;
         var persistent = {
-            'lux': null,
             'previous_status': null,
             'voltage': null,
             'voltage_level': null
         };
 
+        //initial status
         node.status({fill: "grey", shape: "ring", text: "battery"});
 
         if (this.gateway) {
             var self = this;
             node.on('input', function (msg) {
+                // var payload = JSON.parse(msg);
                 var payload = msg.payload;
 
-                if (payload.sid === node.sid && payload.model.indexOf("cube") >= 0) {
+                if (payload.sid === node.sid && payload.model.indexOf("sensor_wleak") >= 0) {
                     var result = null;
                     var data = JSON.parse(payload.data);
 
                     //battery status
                     if (data.voltage) {
-                        persistent.voltage = data.voltage / 1000;
-                        if (data.voltage < 2.5) {
-                            node.status({fill: "red", shape: "dot", text: "battery"});
-                            persistent.voltage_level = 'critical';
-                        } else if (data.voltage < 2.9) {
-                            node.status({fill: "yellow", shape: "dot", text: "battery"});
-                            persistent.voltage_level = 'middle';
-                        } else {
-                            node.status({fill: "green", shape: "dot", text: "battery"});
-                            persistent.voltage_level = 'high';
-                        }
+                        var battery = battery.info(data.voltage);
+
+                        node.status(battery.status);
+                        persistent.voltage = battery.voltage;
+                        persistent.voltage_level = battery.voltage_level;
                     }
 
                     if (node.output === "0") {
                         //raw data
                         result = payload;
                     } else if (node.output === "1") {
-                        //values
+                        //only values
                         result = Object.assign({
-                            status: null,
-                            duration: null,
-                            lux: null
+                            status: null
                         }, persistent);
 
                         if (data.status) {
                             result.status = data.status;
                         }
-                        if (data.no_cube) {
-                            result.status = "no_cube";
-                            result.duration = data.no_cube;
-                        }
 
                         result.tc = new Date().getTime();
                         result.device = self.gateway.getDeviceName(self.sid);
+                    } else if (node.output === "2") {
+                        //template
+                        if (data.status && data.status === "open") {
+                            result = mustache.render(node.openmsg, data);
+                        } else {
+                            result = mustache.render(node.closemsg, data);
+                        }
                     }
 
                     msg.payload = result;
@@ -79,5 +77,5 @@ module.exports = function (RED) {
         }
     }
 
-    RED.nodes.registerType("xiaomi-cube", XiaomicubeNode);
+    RED.nodes.registerType("xiaomi-water-leak", XiaomiMagnetNode);
 };

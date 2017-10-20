@@ -2,21 +2,19 @@ module.exports = function (RED) {
     "use strict";
     var mustache = require("mustache");
 
-    function XiaomiSwitchNode(config) {
+    function XiaomicubeNode(config) {
         RED.nodes.createNode(this, config);
         this.gateway = RED.nodes.getNode(config.gateway);
         this.sid = config.sid;
         this.output = config.output;
-        this.outmsg = config.outmsg;
-        this.outmsgdbcl = config.outmsgdbcl;
 
         var node = this;
         var persistent = {
+            'previous_status': null,
             'voltage': null,
             'voltage_level': null
         };
 
-        //initial status
         node.status({fill: "grey", shape: "ring", text: "battery"});
 
         if (this.gateway) {
@@ -24,53 +22,49 @@ module.exports = function (RED) {
             node.on('input', function (msg) {
                 var payload = msg.payload;
 
-                if (payload.sid === node.sid && payload.model.indexOf("switch") >= 0) {
+                if (payload.sid === node.sid && payload.model.indexOf("cube") >= 0) {
                     var result = null;
                     var data = JSON.parse(payload.data);
 
                     //battery status
                     if (data.voltage) {
-                        persistent.voltage = data.voltage / 1000;
-                        if (data.voltage < 2.5) {
-                            node.status({fill: "red", shape: "dot", text: "battery"});
-                            persistent.voltage_level = 'critical';
-                        } else if (data.voltage < 2.9) {
-                            node.status({fill: "yellow", shape: "dot", text: "battery"});
-                            persistent.voltage_level = 'middle';
-                        } else {
-                            node.status({fill: "green", shape: "dot", text: "battery"});
-                            persistent.voltage_level = 'high';
-                        }
+                        var battery = battery.info(data.voltage);
+
+                        node.status(battery.status);
+                        persistent.voltage = battery.voltage;
+                        persistent.voltage_level = battery.voltage_level;
                     }
 
                     if (node.output === "0") {
                         //raw data
                         result = payload;
                     } else if (node.output === "1") {
-                        //only values
+                        //values
                         result = Object.assign({
-                            status: null
+                            status: null,
+                            duration: null,
+                            lux: null
                         }, persistent);
 
                         if (data.status) {
                             result.status = data.status;
                         }
+                        if (data.no_cube) {
+                            result.status = "no_cube";
+                            result.duration = data.no_cube;
+                        }
 
                         result.tc = new Date().getTime();
                         result.device = self.gateway.getDeviceName(self.sid);
-                    } else if (node.output === "2") {
-                        //template
-                        if (data.status && data.status === "click") {
-                            result = mustache.render(node.outmsg, data);
-                        }
-
-                        if (data.status && data.status === "double_click") {
-                            result = mustache.render(node.outmsgdbcl, data);
-                        }
                     }
 
                     msg.payload = result;
                     node.send([msg]);
+
+                    //save previous state
+                    if (result.status) {
+                        persistent.previous_status = result.status;
+                    }
                 }
             });
         } else {
@@ -78,5 +72,5 @@ module.exports = function (RED) {
         }
     }
 
-    RED.nodes.registerType("xiaomi-switch", XiaomiSwitchNode);
+    RED.nodes.registerType("xiaomi-cube", XiaomicubeNode);
 };
