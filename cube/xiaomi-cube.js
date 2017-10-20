@@ -1,3 +1,5 @@
+var battery = require('../common/battery');
+
 module.exports = function (RED) {
     "use strict";
     var mustache = require("mustache");
