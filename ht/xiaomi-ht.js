@@ -1,4 +1,4 @@
-var battery = require('common/battery');
+var battery = require('../common/battery');
 
 module.exports = function (RED) {
     "use strict";
