@@ -1,10 +1,10 @@
 {
-    "name": "node-red-xiaomi-devices",
-    "version": "1.1",
+    "name": "node-red-contrib-xiaomi-smart-devices",
+    "version": "0.1",
     "description": "Xiaomi Home Automation for NodeRed",
     "repository": {
         "type": "git",
-        "url": "git+ssh://git@github.com:igdr/node-red-contrib-xiaomi-devices.git"
+        "url": "git+ssh://git@github.com:igdr/node-red-contrib-xiaomi-smart-devices.git"
     },
     "license": "MIT",
     "keywords": [
@@ -27,7 +27,7 @@
     },
     "author": "Igor Drozd",
     "bugs": {
-        "url": "https://github.com/igdr/node-red-contrib-xiaomi-devices/issues"
+        "url": "https://github.com/igdr/node-red-contrib-xiaomi-smart-devices/issues"
     },
     "dependencies": {
         "mustache": "^2.3.0",
