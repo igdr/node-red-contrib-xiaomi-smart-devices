@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    RED.nodes.registerType('xiaomi-button', {
+    RED.nodes.registerType('xiaomi-switch', {
         category: 'xiaomi',
         color: '#3FADB5',
         defaults: {
@@ -12,10 +12,10 @@
         },
         inputs: 1,
         outputs: 1,
-        paletteLabel: "button",
-        icon: "light-icon.png",
+        paletteLabel: "switch",
+        icon: "switch.png",
         label: function () {
-            return this.name || "xiaomi-button";
+            return this.name || "Xiaomi Switch";
         },
         oneditprepare: function () {
             var node = this;
@@ -38,7 +38,7 @@
 
             for (key in configNode.deviceList) {
                 var device = configNode.deviceList[key];
-                if (device.model === "button") {
+                if (device.model === "switch") {
                     $('#node-input-sid').append('<option value="' + device.sid + '">' + device.desc + '</option>');
                 }
             }
@@ -51,7 +51,7 @@
     });
 </script>
 
-<script type="text/x-red" data-template-name="xiaomi-button">
+<script type="text/x-red" data-template-name="xiaomi-switch">
     <div class="form-row">
         <label for="node-input-gateway"><i class="icon-tag"></i> Gateway</label>
         <input type="text" id="node-input-gateway" placeholder="xiaomi gateway">
@@ -82,11 +82,11 @@
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="xiaomi-button">
+<script type="text/x-red" data-help-name="xiaomi-switch">
     <p>The Xiaomi Button node</p>
 
     <h3>Details</h3>
-    <p>The incoming json message is parsed if the type model is <code>button</code> and
+    <p>The incoming json message is parsed if the type model is <code>switch</code> and
      the <code>sid</code> matches the configured value for this device.</p>
     <p>Three output types are supported:
         <ul>
@@ -101,7 +101,7 @@
         <dt>payload
             <span class="property-type">json</span>
         </dt>
-        <dd>Gateway <code>button</code> message of type <code>read_ack</code>, <code>heartbeat</code> or <code>report</code></dd>
+        <dd>Gateway <code>switch</code> message of type <code>read_ack</code>, <code>heartbeat</code> or <code>report</code></dd>
     </dl>
 
     <h3>Outputs</h3>
@@ -117,7 +117,7 @@
     <p><pre>
     {
         cmd: "report"
-        model: "button"
+        model: "switch"
         sid: "158d000128b124"
         short_id: 56773
         data: {
