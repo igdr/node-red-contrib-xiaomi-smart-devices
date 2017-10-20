@@ -4,7 +4,7 @@ module.exports = function (RED) {
     "use strict";
     var mustache = require("mustache");
 
-    function XiaomiMagnetNode(config) {
+    function XiaomiWindowDoorSensorNode(config) {
         RED.nodes.createNode(this, config);
         this.gateway = RED.nodes.getNode(config.gateway);
         this.sid = config.sid;
@@ -28,7 +28,7 @@ module.exports = function (RED) {
                 // var payload = JSON.parse(msg);
                 var payload = msg.payload;
 
-                if (payload.sid === node.sid && payload.model.indexOf("magnet") >= 0) {
+                if (payload.sid === node.sid && payload.model.indexOf("window-door-sensor") >= 0) {
                     var result = null;
                     var data = JSON.parse(payload.data);
 
@@ -79,5 +79,5 @@ module.exports = function (RED) {
         }
     }
 
-    RED.nodes.registerType("xiaomi-magnet", XiaomiMagnetNode);
+    RED.nodes.registerType("xiaomi-window-door-sensor", XiaomiWindowDoorSensorNode);
 };

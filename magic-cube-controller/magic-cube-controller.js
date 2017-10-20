@@ -4,7 +4,7 @@ module.exports = function (RED) {
     "use strict";
     var mustache = require("mustache");
 
-    function XiaomicubeNode(config) {
+    function XiaomiCubeNode(config) {
         RED.nodes.createNode(this, config);
         this.gateway = RED.nodes.getNode(config.gateway);
         this.sid = config.sid;
@@ -74,5 +74,5 @@ module.exports = function (RED) {
         }
     }
 
-    RED.nodes.registerType("xiaomi-cube", XiaomicubeNode);
+    RED.nodes.registerType("magic-cube-controller", XiaomiCubeNode);
 };

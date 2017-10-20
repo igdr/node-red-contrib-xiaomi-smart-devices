@@ -1,9 +1,9 @@
 <script type="text/javascript">
-    RED.nodes.registerType('xiaomi-magnet', {
+    RED.nodes.registerType('xiaomi-window-door-sensor', {
         category: 'xiaomi',
         color: '#3FADB5',
         defaults: {
-            gateway: {value:"", type:"xiaomi-configurator"},
+            gateway: {value: "", type: "xiaomi-configurator"},
             name: {value: ""},
             sid: {value: "", required: true},
             openmsg: {value: ""},
@@ -13,12 +13,12 @@
         inputs: 1,
         outputs: 1,
         outputLabels: ["Status"],
-        paletteLabel: "contact",
-        icon: "door-icon.png",
+        paletteLabel: "door",
+        icon: "window-door-sensor.png",
         label: function () {
-            return this.name || "xiaomi-magnet";
+            return this.name || "Window & Door Sensor";
         },
-        oneditprepare: function() {
+        oneditprepare: function () {
             var node = this;
 
             // Get the config node id from the select box:
@@ -40,20 +40,20 @@
 
             for (key in configNode.deviceList) {
                 var device = configNode.deviceList[key];
-                if (device.model === "magnet") {
+                if (device.model === "window-door-sensor") {
                     $('#node-input-sid').append('<option value="' + device.sid + '">' + device.desc + '</option>');
                 }
             }
             $('#node-input-sid').val(node.sid);
         },
-        oneditsave: function() {
+        oneditsave: function () {
             var node = this;
             node.sid = $("#node-input-sid").val();
         }
     });
 </script>
 
-<script type="text/x-red" data-template-name="xiaomi-magnet">
+<script type="text/x-red" data-template-name="xiaomi-window-door-sensor">
     <div class="form-row">
         <label for="node-input-gateway"><i class="icon-tag"></i> Gateway</label>
         <input type="text" id="node-input-gateway" placeholder="xiaomi gateway">
@@ -82,9 +82,10 @@
         <label for="node-input-closemsg"><i class="fa fa-circle-o"></i> Close msg</label>
         <input type="text" id="node-input-closemsg">
     </div>
+
 </script>
 
-<script type="text/x-red" data-help-name="xiaomi-magnet">
+<script type="text/x-red" data-help-name="xiaomi-window-door-sensor">
     <p>The Xiaomi contact sensor node</p>
 
     <h3>Inputs</h3>
@@ -92,7 +93,7 @@
         <dt>payload
             <span class="property-type">json</span>
         </dt>
-        <dd>Gateway <code>magnet</code> message of type <code>read_ack</code>, <code>heartbeat</code> or <code>report</code></dd>
+        <dd>Gateway <code>window-door-sensor</code> message of type <code>read_ack</code>, <code>heartbeat</code> or <code>report</code></dd>
     </dl>
 
     <h3>Outputs</h3>
@@ -106,7 +107,7 @@
     </ol>
 
     <h3>Details</h3>
-    <p>The incoming json message is parsed if the type model is <code>magnet</code> and
+    <p>The incoming json message is parsed if the type model is <code>window-door-sensor</code> and
      the <code>sid</code> matches the configured value for this device.</p>
     <p>Three output types are supported:
         <ul>
@@ -128,7 +129,7 @@
     <p><pre>
     {
         cmd: "read_ack"
-        model: "magnet"
+        model: "window-door-sensor"
         sid: "158d000112fb5d"
         short_id: 50301
         data: "{
@@ -136,5 +137,6 @@
                     "status":"close"
                }"
     }</pre></p>
+
 
 </script>
