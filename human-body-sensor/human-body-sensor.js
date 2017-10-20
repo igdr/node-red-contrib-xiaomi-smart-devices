@@ -4,7 +4,7 @@ module.exports = function (RED) {
     "use strict";
     var mustache = require("mustache");
 
-    function HumanBodySensor(config) {
+    function HumanBodySensorNode(config) {
         RED.nodes.createNode(this, config);
         this.gateway = RED.nodes.getNode(config.gateway);
         this.sid = config.sid;
@@ -89,5 +89,5 @@ module.exports = function (RED) {
         }
     }
 
-    RED.nodes.registerType("xiaomi-human-body-sensor", HumanBodySensor);
+    RED.nodes.registerType("xiaomi-human-body-sensor", HumanBodySensorNode);
 };

@@ -13,7 +13,7 @@
     ],
     "node-red": {
         "nodes": {
-            "xiaomi-human-body-sensor": "motion/human-body-sensor/human-body-sensor.js",
+            "xiaomi-human-body-sensor": "human-body-sensor/human-body-sensor.js",
             "xiaomi-temperature-humidity-sensor": "temperature-humidity-sensor/temperature-humidity-sensor.js",
 
             "xiaomi-magnet": "magnet/xiaomi-magnet.js",

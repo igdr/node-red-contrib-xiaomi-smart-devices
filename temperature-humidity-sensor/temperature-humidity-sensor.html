@@ -10,10 +10,10 @@
         },
         inputs: 1,
         outputs: 1,
-        paletteLabel: "Temperature Humidity Sensor",
+        paletteLabel: "th-sensor",
         icon: "temperature-humidity-sensor.png",
         label: function () {
-            return this.name || "Temperature Humidity Sensor";
+            return this.name || "Temperature & Humidity Sensor";
         },
         oneditprepare: function () {
             var node = this;
@@ -61,6 +61,7 @@
             <option value="1">Just values</option>
         </select>
     </div>
+
 </script>
 
 <script type="text/x-red" data-help-name="xiaomi-temperature-humidity-sensor">
@@ -103,4 +104,5 @@
                     "humidity":"5699"
                }"
     }</pre></p>
+
 </script>
