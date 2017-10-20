@@ -4,7 +4,7 @@ module.exports = function (RED) {
     "use strict";
     var mustache = require("mustache");
 
-    function XiaomiMagnetNode(config) {
+    function XiaomiWaterSensorNode(config) {
         RED.nodes.createNode(this, config);
         this.gateway = RED.nodes.getNode(config.gateway);
         this.sid = config.sid;
@@ -79,5 +79,5 @@ module.exports = function (RED) {
         }
     }
 
-    RED.nodes.registerType("xiaomi-water-leak", XiaomiMagnetNode);
+    RED.nodes.registerType("xiaomi-water-sensor", XiaomiWaterSensorNode);
 };
