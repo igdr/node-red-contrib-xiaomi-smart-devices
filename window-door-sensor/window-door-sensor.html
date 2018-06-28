@@ -1,56 +1,56 @@
 <script type="text/javascript">
-    RED.nodes.registerType('xiaomi-window-door-sensor', {
-        category: 'xiaomi',
-        color: '#3FADB5',
-        defaults: {
-            gateway: {value: "", type: "xiaomi-configurator"},
-            name: {value: ""},
-            sid: {value: "", required: true},
-            openmsg: {value: ""},
-            closemsg: {value: ""},
-            output: {value: "1"}
-        },
-        inputs: 1,
-        outputs: 1,
-        outputLabels: ["Status"],
-        paletteLabel: "door",
-        icon: "window-door-sensor.png",
-        label: function () {
-            return this.name || "Xiaomi Window Door Sensor";
-        },
-        oneditprepare: function () {
-            var node = this;
+  RED.nodes.registerType('xiaomi-window-door-sensor', {
+    category: 'xiaomi',
+    color: '#3FADB5',
+    defaults: {
+      gateway: {value: "", type: "xiaomi-configurator"},
+      name: {value: ""},
+      sid: {value: "", required: true},
+      openmsg: {value: ""},
+      closemsg: {value: ""},
+      output: {value: "1"}
+    },
+    inputs: 1,
+    outputs: 1,
+    outputLabels: ["Status"],
+    paletteLabel: "door",
+    icon: "window-door-sensor.png",
+    label: function () {
+      return this.name || "Xiaomi Window Door Sensor";
+    },
+    oneditprepare: function () {
+      let node = this;
 
-            // Get the config node id from the select box:
-            var configNodeID = $('#node-input-gateway').val();
-            // Get the config node using the ID:
-            var configNode = RED.nodes.node(configNodeID);
+      // Get the config node id from the select box:
+      let configNodeID = $('#node-input-gateway').val();
+      // Get the config node using the ID:
+      let configNode = RED.nodes.node(configNodeID);
 
-            $("#node-input-output").change(function () {
-                if ($(this).val() == "2") {
-                    $(".node-input-msg").show();
-                } else {
-                    $(".node-input-msg").hide();
-                }
-            });
-
-            $("#node-input-gateway").change(function () {
-
-            });
-
-            for (key in configNode.deviceList) {
-                var device = configNode.deviceList[key];
-                if (device.model === "window-door-sensor") {
-                    $('#node-input-sid').append('<option value="' + device.sid + '">' + device.desc + '</option>');
-                }
-            }
-            $('#node-input-sid').val(node.sid);
-        },
-        oneditsave: function () {
-            var node = this;
-            node.sid = $("#node-input-sid").val();
+      $("#node-input-output").change(function () {
+        if ($(this).val() == "2") {
+          $(".node-input-msg").show();
+        } else {
+          $(".node-input-msg").hide();
         }
-    });
+      });
+
+      $("#node-input-gateway").change(function () {
+
+      });
+
+      for (key in configNode.deviceList) {
+        let device = configNode.deviceList[key];
+        if (device.model === "window-door-sensor") {
+          $('#node-input-sid').append('<option value="' + device.sid + '">' + device.desc + '</option>');
+        }
+      }
+      $('#node-input-sid').val(node.sid);
+    },
+    oneditsave: function () {
+      let node = this;
+      node.sid = $("#node-input-sid").val();
+    }
+  });
 </script>
 
 <script type="text/x-red" data-template-name="xiaomi-window-door-sensor">
@@ -82,6 +82,7 @@
         <label for="node-input-closemsg"><i class="fa fa-circle-o"></i> Close msg</label>
         <input type="text" id="node-input-closemsg">
     </div>
+
 
 </script>
 
@@ -137,6 +138,7 @@
                     "status":"close"
                }"
     }</pre></p>
+
 
 
 </script>

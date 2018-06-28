@@ -1,22 +1,22 @@
 module.exports.info = function (input) {
-    "use strict";
+  "use strict";
 
-    //battery status
-    var voltage = input / 1000;
-    var status = {fill: "green", shape: "dot", text: "battery"};
-    var voltage_level = 'high';
+  //battery status
+  let voltage = input / 1000;
+  let status = {fill: "green", shape: "dot", text: "battery"};
+  let voltage_level = 'high';
 
-    if (input < 2.5) {
-        status = {fill: "red", shape: "dot", text: "battery"};
-        voltage_level = 'critical';
-    } else if (input < 2.9) {
-        status = {fill: "yellow", shape: "dot", text: "battery"};
-        voltage_level = 'middle';
-    }
+  if (input < 2.5) {
+    status = {fill: "red", shape: "dot", text: "battery"};
+    voltage_level = 'critical';
+  } else if (input < 2.9) {
+    status = {fill: "yellow", shape: "dot", text: "battery"};
+    voltage_level = 'middle';
+  }
 
-    return {
-        voltage: voltage,
-        status: status,
-        voltage_level: voltage_level
-    }
+  return {
+    voltage: voltage,
+    status: status,
+    voltage_level: voltage_level
+  }
 };

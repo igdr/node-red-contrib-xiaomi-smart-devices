@@ -1,36 +1,35 @@
 {
-    "name": "node-red-contrib-xiaomi-smart-devices",
-    "version": "0.0.9",
-    "description": "Xiaomi Home Automation for NodeRed",
-    "repository": {
-        "type": "git",
-        "url": "git+ssh://git@github.com:igdr/node-red-contrib-xiaomi-smart-devices.git"
-    },
-    "license": "MIT",
-    "keywords": [
-        "Xiaomi",
-        "node-red"
-    ],
-    "node-red": {
-        "nodes": {
-            "xiaomi-human-body-sensor": "human-body-sensor/human-body-sensor.js",
-            "xiaomi-temperature-humidity-sensor": "temperature-humidity-sensor/temperature-humidity-sensor.js",
-            "xiaomi-magic-cube-controller": "magic-cube-controller/magic-cube-controller.js",
-            "xiaomi-window-door-sensor": "window-door-sensor/window-door-sensor.js",
-            "xiaomi-water-sensor": "water-sensor/water-sensor.js",
-            "xiaomi-configurator": "configurator/xiaomi-configurator.js",
-            "xiaomi-switch": "switch/switch.js",
-
-            "xiaomi-wall-switch": "wall-switch/wall-xiaomi-switch.js",
-            "xiaomi-socket": "socket/xiaomi-socket.js"
-        }
-    },
-    "author": "Igor Drozd",
-    "bugs": {
-        "url": "https://github.com/igdr/node-red-contrib-xiaomi-smart-devices/issues"
-    },
-    "dependencies": {
-        "mustache": "^2.3.0",
-        "miio": "0.13.0"
+  "name": "node-red-contrib-xiaomi-smart-devices",
+  "version": "0.0.9",
+  "description": "Xiaomi Home Automation for NodeRed",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:igdr/node-red-contrib-xiaomi-smart-devices.git"
+  },
+  "license": "MIT",
+  "keywords": [
+    "Xiaomi",
+    "node-red"
+  ],
+  "node-red": {
+    "nodes": {
+      "xiaomi-human-body-sensor": "human-body-sensor/human-body-sensor.js",
+      "xiaomi-temperature-humidity-sensor": "temperature-humidity-sensor/temperature-humidity-sensor.js",
+      "xiaomi-magic-cube-controller": "magic-cube-controller/magic-cube-controller.js",
+      "xiaomi-window-door-sensor": "window-door-sensor/window-door-sensor.js",
+      "xiaomi-water-sensor": "water-sensor/water-sensor.js",
+      "xiaomi-configurator": "configurator/xiaomi-configurator.js",
+      "xiaomi-switch": "switch/switch.js",
+      "xiaomi-wall-switch": "wall-switch/wall-xiaomi-switch.js",
+      "xiaomi-socket": "socket/xiaomi-socket.js"
     }
+  },
+  "author": "Igor Drozd",
+  "bugs": {
+    "url": "https://github.com/igdr/node-red-contrib-xiaomi-smart-devices/issues"
+  },
+  "dependencies": {
+    "mustache": "^2.3.0",
+    "miio": "0.13.0"
+  }
 }

@@ -1,54 +1,54 @@
 <script type="text/javascript">
-    RED.nodes.registerType('xiaomi-switch', {
-        category: 'xiaomi',
-        color: '#3FADB5',
-        defaults: {
-            gateway: {value: "", type: "xiaomi-configurator"},
-            name: {value: ""},
-            sid: {value: "", required: true},
-            outmsg: {value: "{{click}}"},
-            outmsgdbcl: {value: "{{double_click}}"},
-            output: {value: "1"}
-        },
-        inputs: 1,
-        outputs: 1,
-        paletteLabel: "switch",
-        icon: "switch.png",
-        label: function () {
-            return this.name || "Xiaomi Switch";
-        },
-        oneditprepare: function () {
-            var node = this;
+  RED.nodes.registerType('xiaomi-switch', {
+    category: 'xiaomi',
+    color: '#3FADB5',
+    defaults: {
+      gateway: {value: "", type: "xiaomi-configurator"},
+      name: {value: ""},
+      sid: {value: "", required: true},
+      outmsg: {value: "{{click}}"},
+      outmsgdbcl: {value: "{{double_click}}"},
+      output: {value: "1"}
+    },
+    inputs: 1,
+    outputs: 1,
+    paletteLabel: "switch",
+    icon: "switch.png",
+    label: function () {
+      return this.name || "Xiaomi Switch";
+    },
+    oneditprepare: function () {
+      let node = this;
 
-            // Get the config node id from the select box:
-            var configNodeID = $('#node-input-gateway').val();
-            // Get the config node using the ID:
-            var configNode = RED.nodes.node(configNodeID);
+      // Get the config node id from the select box:
+      let configNodeID = $('#node-input-gateway').val();
+      // Get the config node using the ID:
+      let configNode = RED.nodes.node(configNodeID);
 
-            $("#node-input-output").change(function () {
-                if ($(this).val() == "2") {
-                    $(".node-input-msg").show();
-                } else {
-                    $(".node-input-msg").hide();
-                }
-            });
-
-            $(".node-input-msg").hide();
-            $("#node-input-output").val(node.output);
-
-            for (key in configNode.deviceList) {
-                var device = configNode.deviceList[key];
-                if (device.model === "switch") {
-                    $('#node-input-sid').append('<option value="' + device.sid + '">' + device.desc + '</option>');
-                }
-            }
-            $('#node-input-sid').val(node.sid);
-        },
-        oneditsave: function () {
-            var node = this;
-            node.sid = $("#node-input-sid").val();
+      $("#node-input-output").change(function () {
+        if ($(this).val() == "2") {
+          $(".node-input-msg").show();
+        } else {
+          $(".node-input-msg").hide();
         }
-    });
+      });
+
+      $(".node-input-msg").hide();
+      $("#node-input-output").val(node.output);
+
+      for (key in configNode.deviceList) {
+        let device = configNode.deviceList[key];
+        if (device.model === "switch") {
+          $('#node-input-sid').append('<option value="' + device.sid + '">' + device.desc + '</option>');
+        }
+      }
+      $('#node-input-sid').val(node.sid);
+    },
+    oneditsave: function () {
+      let node = this;
+      node.sid = $("#node-input-sid").val();
+    }
+  });
 </script>
 
 <script type="text/x-red" data-template-name="xiaomi-switch">
@@ -80,6 +80,7 @@
         <label for="node-input-outmsgdbcl"><i class="fa fa-hand-peace-o"></i> Double-click</label>
         <input type="text" id="node-input-outmsgdbcl">
     </div>
+
 </script>
 
 <script type="text/x-red" data-help-name="xiaomi-switch">
@@ -126,4 +127,5 @@
             "voltage_level": "high"
         }
     }</pre></p>
+
 </script>

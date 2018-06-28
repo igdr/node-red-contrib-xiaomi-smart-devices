@@ -1,45 +1,45 @@
 <script type="text/javascript">
-    RED.nodes.registerType('magic-cube-controller', {
-        category: 'xiaomi',
-        color: '#3FADB5',
-        defaults: {
-            gateway: {value: "", type: "xiaomi-configurator"},
-            name: {value: ""},
-            sid: {value: "", required: true},
-            output: {value: "1"}
-        },
-        inputs: 1,
-        outputs: 1,
-        paletteLabel: "cube",
-        icon: "cube-icon.png",
-        label: function () {
-            return this.name || "Xiaomi Magic Cube Controller";
-        },
-        oneditprepare: function () {
-            var node = this;
+  RED.nodes.registerType('magic-cube-controller', {
+    category: 'xiaomi',
+    color: '#3FADB5',
+    defaults: {
+      gateway: {value: "", type: "xiaomi-configurator"},
+      name: {value: ""},
+      sid: {value: "", required: true},
+      output: {value: "1"}
+    },
+    inputs: 1,
+    outputs: 1,
+    paletteLabel: "cube",
+    icon: "cube-icon.png",
+    label: function () {
+      return this.name || "Xiaomi Magic Cube Controller";
+    },
+    oneditprepare: function () {
+      let node = this;
 
-            // Get the config node id from the select box:
-            var configNodeID = $('#node-input-gateway').val();
-            // Get the config node using the ID:
-            var configNode = RED.nodes.node(configNodeID);
+      // Get the config node id from the select box:
+      let configNodeID = $('#node-input-gateway').val();
+      // Get the config node using the ID:
+      let configNode = RED.nodes.node(configNodeID);
 
-            $("#node-input-gateway").change(function () {
+      $("#node-input-gateway").change(function () {
 
-            });
+      });
 
-            for (key in configNode.deviceList) {
-                var device = configNode.deviceList[key];
-                if (device.model === "cube") {
-                    $('#node-input-sid').append('<option value="' + device.sid + '">' + device.desc + '</option>');
-                }
-            }
-            $('#node-input-sid').val(node.sid);
-        },
-        oneditsave: function () {
-            var node = this;
-            node.sid = $("#node-input-sid").val();
+      for (key in configNode.deviceList) {
+        let device = configNode.deviceList[key];
+        if (device.model === "cube") {
+          $('#node-input-sid').append('<option value="' + device.sid + '">' + device.desc + '</option>');
         }
-    });
+      }
+      $('#node-input-sid').val(node.sid);
+    },
+    oneditsave: function () {
+      let node = this;
+      node.sid = $("#node-input-sid").val();
+    }
+  });
 </script>
 
 <script type="text/x-red" data-template-name="magic-cube-controller">
@@ -62,6 +62,7 @@
             <option value="1">Just values</option>
         </select>
     </div>
+
 
 </script>
 
@@ -103,6 +104,7 @@
             "status":"flip90"
         }
     }</pre></p>
+
 
 
 </script>

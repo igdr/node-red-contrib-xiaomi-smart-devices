@@ -1,104 +1,120 @@
 <script type="text/javascript">
-    RED.nodes.registerType('xiaomi-configurator', {
-        category: 'config',
-        defaults: {
-            name: {value: ""},
-            deviceList: {value: [{sid: "", desc: "", model: "plug"}]},
-            key: {value: ""}
+  RED.nodes.registerType('xiaomi-configurator', {
+    category: 'config',
+    defaults: {
+      name: {value: ""},
+      deviceList: {value: [{sid: "", desc: "", model: "plug"}]},
+      key: {value: ""}
+    },
+    label: function () {
+      return this.name || "xiaomi-configurator";
+    },
+    oneditprepare: function () {
+      let node = this,
+        deviceInput = $("#node-config-input-devices");
+
+      let types = [{
+        value: "temperature-humidity-sensor",
+        label: "Temperature & Humidity Sensor",
+        icon: "icons/node-red/temperature-humidity-sensor.png"
+      }, {
+        value: "window-door-sensor",
+        label: "Window Door Sensor",
+        icon: "icons/node-red/window-door-sensor.png"
+      }, {
+        value: "human-body-sensor",
+        label: "Human Body Sensor",
+        icon: "icons/node-red/human-body-sensor.png"
+      }, {
+        value: "plug",
+        label: "plug socket",
+        icon: "icons/node-red/plug-tw-icon.png"
+      }, {
+        value: "switch",
+        label: "Switch",
+        icon: "icons/node-red/switch.png"
+      }, {
+        value: "magic-cube-controller",
+        label: "Magic cube Controller",
+        icon: "icons/node-red/magic-cube-controller.png"
+      }, {
+        value: "water-sensor",
+        label: "Water Sensor",
+        icon: "icons/node-red/water-sensor.png"
+      }];
+
+      deviceInput.css('min-height', '250px').css('min-width', '600px').editableList({
+        addItem: function (container, i, device) {
+          if (!device.hasOwnProperty('model')) {
+            device.model = 'sensor_ht';
+          }
+          let row = $('<div/>').appendTo(container);
+
+          $('<label/>', {
+            for: "node-config-input-sid-" + i,
+            style: "margin-left: 3px; width: 15px;vertical-align:middle"
+          }).appendTo(row);
+          let sid = $('<input/>', {
+            id: "node-config-input-sid-" + i,
+            type: "text",
+            placeholder: "SID",
+            style: "width:auto;vertical-align:top"
+          }).appendTo(row);
+          sid.typedInput({
+            default: 'sensor_ht',
+            types: types
+          });
+
+          $('<label/>', {
+            for: "node-config-input-desc-" + i,
+            style: "margin-left: 7px; width: 20px;vertical-align:middle"
+          }).html('<i class="fa fa-pencil-square-o"></i>').appendTo(row);
+          let desc = $('<input/>', {
+            id: "node-config-input-desc-" + i,
+            type: "text",
+            placeholder: "description",
+            style: "width:auto;vertical-align:top"
+          }).appendTo(row);
+
+          sid.typedInput('value', device.sid);
+          sid.typedInput('type', device.model);
+          desc.val(device.desc);
         },
-        label: function () {
-            return this.name || "xiaomi-configurator";
+        resize: function () {
         },
-        oneditprepare: function () {
-            var node = this,
-                deviceInput = $("#node-config-input-devices");
-
-            var types = [{
-                value: "temperature-humidity-sensor",
-                label: "Temperature & Humidity Sensor",
-                icon: "icons/node-red/temperature-humidity-sensor.png"
-            }, {
-                value: "window-door-sensor",
-                label: "Window Door Sensor",
-                icon: "icons/node-red/window-door-sensor.png"
-            }, {
-                value: "human-body-sensor",
-                label: "Human Body Sensor",
-                icon: "icons/node-red/human-body-sensor.png"
-            }, {
-                value: "plug",
-                label: "plug socket",
-                icon: "icons/node-red/plug-tw-icon.png"
-            }, {
-                value: "switch",
-                label: "Switch",
-                icon: "icons/node-red/switch.png"
-            }, {
-                value: "magic-cube-controller",
-                label: "Magic cube Controller",
-                icon: "icons/node-red/magic-cube-controller.png"
-            }, {
-                value: "water-sensor",
-                label: "Water Sensor",
-                icon: "icons/node-red/water-sensor.png"
-            }];
-
-            deviceInput.css('min-height', '250px').css('min-width', '600px').editableList({
-                addItem: function (container, i, device) {
-                    if (!device.hasOwnProperty('model')) {
-                        device.model = 'sensor_ht';
-                    }
-                    var row = $('<div/>').appendTo(container);
-
-                    $('<label/>', {for: "node-config-input-sid-" + i, style: "margin-left: 3px; width: 15px;vertical-align:middle"}).appendTo(row);
-                    var sid = $('<input/>', {id: "node-config-input-sid-" + i, type: "text", placeholder: "SID", style: "width:auto;vertical-align:top"}).appendTo(row);
-                    sid.typedInput({
-                        default: 'sensor_ht',
-                        types: types
-                    });
-
-                    $('<label/>', {for: "node-config-input-desc-" + i, style: "margin-left: 7px; width: 20px;vertical-align:middle"}).html('<i class="fa fa-pencil-square-o"></i>').appendTo(row);
-                    var desc = $('<input/>', {id: "node-config-input-desc-" + i, type: "text", placeholder: "description", style: "width:auto;vertical-align:top"}).appendTo(row);
-
-                    sid.typedInput('value', device.sid);
-                    sid.typedInput('type', device.model);
-                    desc.val(device.desc);
-                },
-                resize: function () {
-                },
-                removeItem: function (opt) {
-                },
-                sortItems: function (rules) {
-                },
-                sortable: true,
-                removable: true
-            });
-
-            for (var i = 0; i < this.deviceList.length; i++) {
-                var device = this.deviceList[i];
-                deviceInput.editableList('addItem', device);
-            }
-            var listHeight = deviceInput.editableList('items').size() * 51 + 50;
-            deviceInput.editableList('height', listHeight);
+        removeItem: function (opt) {
         },
-        oneditsave: function () {
-            var devices = ct.editableList('items');
-            var node = this;
-            var devicesArray = [];
-            devices.each(function (i) {
-                var deviceElement = $(this);
-                var sid = deviceElement.find("#node-config-input-sid-" + i).val();
-                var desc = deviceElement.find("#node-config-input-desc-" + i).val();
-                var model = deviceElement.find("#node-config-input-sid-" + i).typedInput('type');
-                var d = {};
-                d['sid'] = sid;
-                d['desc'] = desc;
-                d['model'] = model;
-                devicesArray.push(d);
-            });
-            node.deviceList = devicesArray;
-        }
-    });
+        sortItems: function (rules) {
+        },
+        sortable: true,
+        removable: true
+      });
+
+      for (let i = 0; i < this.deviceList.length; i++) {
+        let device = this.deviceList[i];
+        deviceInput.editableList('addItem', device);
+      }
+      let listHeight = deviceInput.editableList('items').size() * 51 + 50;
+      deviceInput.editableList('height', listHeight);
+    },
+    oneditsave: function () {
+      let devices = ct.editableList('items');
+      let node = this;
+      let devicesArray = [];
+      devices.each(function (i) {
+        let deviceElement = $(this);
+        let sid = deviceElement.find("#node-config-input-sid-" + i).val();
+        let desc = deviceElement.find("#node-config-input-desc-" + i).val();
+        let model = deviceElement.find("#node-config-input-sid-" + i).typedInput('type');
+        let d = {};
+        d['sid'] = sid;
+        d['desc'] = desc;
+        d['model'] = model;
+        devicesArray.push(d);
+      });
+      node.deviceList = devicesArray;
+    }
+  });
 </script>
 
 <script type="text/x-red" data-template-name="xiaomi-configurator">
@@ -113,6 +129,7 @@
     <div class="form-row node-config-input-devices">
         <ol id="node-config-input-devices"></ol>
     </div>
+
 </script>
 
 <script type="text/x-red" data-help-name="xiaomi-configurator">
@@ -139,4 +156,5 @@
     retrieved via the Xiaomi Home App when in developer mode. Enter the key here and it is used
     together with the token from the gateway's heartbeat message to recalculate the key to switch
     the plug. If you do not specify a key, the plug-node can not be used.</p>
+
 </script>
