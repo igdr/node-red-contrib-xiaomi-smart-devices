@@ -10,9 +10,8 @@
       return this.name || "xiaomi-configurator";
     },
     oneditprepare: function () {
-      let node = this,
-        deviceInput = $("#node-config-input-devices");
-
+      let deviceInput = $("#node-config-input-devices");
+      let byDefault = 'temperature-humidity-sensor';
       let types = [{
         value: "temperature-humidity-sensor",
         label: "Temperature & Humidity Sensor",
@@ -42,54 +41,58 @@
         label: "Water Sensor",
         icon: "icons/node-red/water-sensor.png"
       }];
-      let byDefault = 'temperature-humidity-sensor';
 
-      deviceInput.css('min-height', '250px').css('min-width', '600px').editableList({
-        addItem: function (container, i, device) {
-          if (!device.hasOwnProperty('model')) {
-            device.model = byDefault;
-          }
-          let row = $('<div/>').appendTo(container);
+      deviceInput
+        .css('min-height', '250px').css('min-width', '600px')
+        .editableList({
+          addItem: function (container, i, device) {
+            if (!device.hasOwnProperty('model')) {
+              device.model = byDefault;
+            }
+            let row = $('<div/>').appendTo(container);
 
-          $('<label/>', {
-            for: "node-config-input-sid-" + i,
-            style: "margin-left: 3px; width: 15px;vertical-align:middle"
-          }).appendTo(row);
-          let sid = $('<input/>', {
-            id: "node-config-input-sid-" + i,
-            type: "text",
-            placeholder: "SID",
-            style: "width:auto;vertical-align:top"
-          }).appendTo(row);
-          sid.typedInput({
-            default: byDefault,
-            types: types
-          });
+            $('<label/>', {
+              for: "node-config-input-sid-" + i,
+              style: "margin-left: 3px; width: 15px;vertical-align:middle"
+            }).appendTo(row);
 
-          $('<label/>', {
-            for: "node-config-input-desc-" + i,
-            style: "margin-left: 7px; width: 20px;vertical-align:middle"
-          }).html('<i class="fa fa-pencil-square-o"></i>').appendTo(row);
-          let desc = $('<input/>', {
-            id: "node-config-input-desc-" + i,
-            type: "text",
-            placeholder: "description",
-            style: "width:auto;vertical-align:top"
-          }).appendTo(row);
+            let sid = $('<input/>', {
+              id: "node-config-input-sid-" + i,
+              type: "text",
+              placeholder: "SID",
+              style: "width:auto;vertical-align:top"
+            }).appendTo(row);
 
-          sid.typedInput('value', device.sid);
-          sid.typedInput('type', device.model);
-          desc.val(device.desc);
-        },
-        resize: function () {
-        },
-        removeItem: function (opt) {
-        },
-        sortItems: function (rules) {
-        },
-        sortable: true,
-        removable: true
-      });
+            // sid.typedInput({
+            //   default: byDefault,
+            //   types: types
+            // });
+
+            $('<label/>', {
+              for: "node-config-input-desc-" + i,
+              style: "margin-left: 7px; width: 20px;vertical-align:middle"
+            }).html('<i class="fa fa-pencil-square-o"></i>').appendTo(row);
+
+            let desc = $('<input/>', {
+              id: "node-config-input-desc-" + i,
+              type: "text",
+              placeholder: "description",
+              style: "width:auto;vertical-align:top"
+            }).appendTo(row);
+
+            sid.typedInput('value', device.sid);
+            sid.typedInput('type', device.model);
+            desc.val(device.desc);
+          },
+          resize: function () {
+          },
+          removeItem: function (opt) {
+          },
+          sortItems: function (rules) {
+          },
+          sortable: true,
+          removable: true
+        });
 
       for (let i = 0; i < this.deviceList.length; i++) {
         let device = this.deviceList[i];
@@ -132,10 +135,6 @@
     </div>
 
 
-
-
-
-
 </script>
 
 <script type="text/x-red" data-help-name="xiaomi-configurator">
@@ -161,11 +160,6 @@
     <p>If you want to use the wall sockets, you need to set the key from the gateway. The key can be
     retrieved via the Xiaomi Home App when in developer mode. Enter the key here and it is used
     together with the token from the gateway's heartbeat message to recalculate the key to switch
-    the plug. If you do not specify a key, the plug-node can not be used.</p>
-
-
-
-
 
 
 </script>
