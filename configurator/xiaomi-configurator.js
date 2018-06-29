@@ -6,8 +6,6 @@ module.exports = function (RED) {
     this.deviceList = n.deviceList || [];
     this.key = n.key;
 
-    let node = this;
-
     this.getDeviceName = function (sid) {
       for (let i in this.deviceList) {
         if (this.deviceList[i].sid === sid) {

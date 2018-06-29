@@ -42,11 +42,12 @@
         label: "Water Sensor",
         icon: "icons/node-red/water-sensor.png"
       }];
+      let byDefault = 'temperature-humidity-sensor';
 
       deviceInput.css('min-height', '250px').css('min-width', '600px').editableList({
         addItem: function (container, i, device) {
           if (!device.hasOwnProperty('model')) {
-            device.model = 'sensor_ht';
+            device.model = byDefault;
           }
           let row = $('<div/>').appendTo(container);
 
@@ -61,7 +62,7 @@
             style: "width:auto;vertical-align:top"
           }).appendTo(row);
           sid.typedInput({
-            default: 'sensor_ht',
+            default: byDefault,
             types: types
           });
 
@@ -130,6 +131,11 @@
         <ol id="node-config-input-devices"></ol>
     </div>
 
+
+
+
+
+
 </script>
 
 <script type="text/x-red" data-help-name="xiaomi-configurator">
@@ -156,5 +162,10 @@
     retrieved via the Xiaomi Home App when in developer mode. Enter the key here and it is used
     together with the token from the gateway's heartbeat message to recalculate the key to switch
     the plug. If you do not specify a key, the plug-node can not be used.</p>
+
+
+
+
+
 
 </script>
