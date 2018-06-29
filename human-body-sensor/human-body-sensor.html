@@ -3,19 +3,19 @@
     category: 'xiaomi',
     color: '#3FADB5',
     defaults: {
-      gateway: {value: "", type: "xiaomi-configurator"},
-      name: {value: ""},
-      sid: {value: "", required: true},
-      motionmsg: {value: ""},
-      nomotionmsg: {value: ""},
-      output: {value: "1"}
+      gateway: {value: '', type: 'xiaomi-configurator'},
+      name: {value: ''},
+      sid: {value: '', required: true},
+      motionmsg: {value: ''},
+      nomotionmsg: {value: ''},
+      output: {value: '1'}
     },
     inputs: 1,
     outputs: 1,
-    paletteLabel: "motion",
-    icon: "icons/human-body-sensor.png",
+    paletteLabel: 'motion',
+    icon: 'icons/human-body-sensor.png',
     label: function () {
-      return this.name || "Xiaomi Human Body Sensor";
+      return this.name || 'Xiaomi Human Body Sensor';
     },
     oneditprepare: function () {
       let node = this;
@@ -25,29 +25,29 @@
       // Get the config node using the ID:
       let configNode = RED.nodes.node(configNodeID);
 
-      $("#node-input-output").change(function () {
-        if ($(this).val() == "2") {
-          $(".node-input-msg").show();
+      $('#node-input-output').change(function () {
+        if ($(this).val() === '2') {
+          $('.node-input-msg').show();
         } else {
-          $(".node-input-msg").hide();
+          $('.node-input-msg').hide();
         }
       });
 
-      $("#node-input-gateway").change(function () {
+      $('#node-input-gateway').change(function () {
 
       });
 
       for (key in configNode.deviceList) {
         let device = configNode.deviceList[key];
-        if (device.model === "human-body-sensor") {
-          $('#node-input-sid').append('<option value="' + device.sid + '">' + device.desc + '</option>');
+        if (device.model === 'human-body-sensor') {
+          $('#node-input-sid').append('<option value='' + device.sid + ''>' + device.desc + '</option>');
         }
       }
       $('#node-input-sid').val(node.sid);
     },
     oneditsave: function () {
       let node = this;
-      node.sid = $("#node-input-sid").val();
+      node.sid = $('#node-input-sid').val();
     }
   });
 </script>
@@ -81,6 +81,10 @@
         <label for="node-input-nomotionmsg"><i class="fa fa-circle"></i> No motion msg</label>
         <input type="text" id="node-input-nomotionmsg">
     </div>
+
+
+
+
 
 
 
@@ -128,7 +132,6 @@
             "status":"motion"
         }
     }</pre></p>
-
 
 
 </script>
