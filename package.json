@@ -18,10 +18,10 @@
       "xiaomi-magic-cube-controller": "magic-cube-controller/magic-cube-controller.js",
       "xiaomi-window-door-sensor": "window-door-sensor/window-door-sensor.js",
       "xiaomi-water-sensor": "water-sensor/water-sensor.js",
-      "xiaomi-configurator": "configurator/xiaomi-configurator.js",
+      "xiaomi-configurator": "configurator/configurator.js",
       "xiaomi-switch": "switch/switch.js",
-      "xiaomi-wall-switch": "wall-switch/wall-xiaomi-switch.js",
-      "xiaomi-socket": "socket/xiaomi-socket.js"
+      "xiaomi-wall-switch": "wall-switch/wall-switch.js",
+      "xiaomi-socket": "socket/socket.js"
     }
   },
   "author": "Igor Drozd",
