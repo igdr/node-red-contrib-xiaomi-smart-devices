@@ -40,7 +40,7 @@
       for (key in configNode.deviceList) {
         let device = configNode.deviceList[key];
         if (device.model === 'human-body-sensor') {
-          $('#node-input-sid').append('<option value='' + device.sid + ''>' + device.desc + '</option>');
+          $('#node-input-sid').append('<option value="' + device.sid + '">' + device.desc + '</option>');
         }
       }
       $('#node-input-sid').val(node.sid);
@@ -81,13 +81,6 @@
         <label for="node-input-nomotionmsg"><i class="fa fa-circle"></i> No motion msg</label>
         <input type="text" id="node-input-nomotionmsg">
     </div>
-
-
-
-
-
-
-
 </script>
 
 <script type="text/x-red" data-help-name="xiaomi-human-body-sensor">
@@ -132,6 +125,4 @@
             "status":"motion"
         }
     }</pre></p>
-
-
 </script>
