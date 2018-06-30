@@ -37,7 +37,7 @@ module.exports = function (RED) {
     if (key) {
       let token = msg.payload.token;
       if (token) {
-        let cipher = crypto.createCipheriv('aes128', key, (new Buffer("17996d093d28ddb3ba695a2e6f58562e", "hex")));
+        let cipher = crypto.createCipheriv('aes128', key, (new Buffer('17996d093d28ddb3ba695a2e6f58562e', 'hex')));
         let encoded_string = cipher.update(token, 'utf8', 'hex');
 
         encoded_string += cipher.final('hex');
@@ -83,7 +83,7 @@ module.exports = function (RED) {
       socket.on('message', (message, rinfo) => {
         let msg = createMessage(message, rinfo)
 
-        if (msg.payload.cmd == "heartbeat" && msg.payload.model == "gateway") {
+        if (msg.payload.cmd == 'heartbeat' && msg.payload.model == 'gateway') {
           //get token
           currentToken = getGatewayToken(this.gateway.key, msg);
 

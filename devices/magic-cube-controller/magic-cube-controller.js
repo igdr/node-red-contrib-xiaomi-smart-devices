@@ -1,8 +1,8 @@
-let battery = require('../../common/battery');
+const battery = require('../../common/battery');
 
 module.exports = function (RED) {
-  "use strict";
-  let mustache = require("mustache");
+  'use strict';
+  let mustache = require('mustache');
 
   function XiaomiCubeNode(config) {
     RED.nodes.createNode(this, config);
@@ -17,30 +17,29 @@ module.exports = function (RED) {
       'voltage_level': null
     };
 
-    node.status({fill: "grey", shape: "ring", text: "battery"});
+    node.status({fill: 'grey', shape: 'ring', text: 'battery'});
 
     if (this.gateway) {
       let self = this;
       node.on('input', function (msg) {
         let payload = msg.payload;
 
-        if (payload.sid === node.sid && payload.model.indexOf("cube") >= 0) {
+        if (payload.sid === node.sid && payload.model.indexOf('cube') >= 0) {
           let result = null;
           let data = payload.data;
 
           //battery status
           if (data.voltage) {
-            let battery = battery.info(data.voltage);
-
-            node.status(battery.status);
-            persistent.voltage = battery.voltage;
-            persistent.voltage_level = battery.voltage_level;
+            let info = battery.info(data.voltage);
+            node.status(info.status);
+            persistent.voltage = info.voltage;
+            persistent.voltage_level = info.voltage_level;
           }
 
-          if (node.output === "0") {
+          if (node.output === '0') {
             //raw data
             result = payload;
-          } else if (node.output === "1") {
+          } else if (node.output === '1') {
             //values
             result = Object.assign({
               status: null,
@@ -52,7 +51,7 @@ module.exports = function (RED) {
               result.status = data.status;
             }
             if (data.no_cube) {
-              result.status = "no_cube";
+              result.status = 'no_cube';
               result.duration = data.no_cube;
             }
 
@@ -70,9 +69,9 @@ module.exports = function (RED) {
         }
       });
     } else {
-      node.status({fill: "red", shape: "ring", text: "No gateway configured"});
+      node.status({fill: 'red', shape: 'ring', text: 'No gateway configured'});
     }
   }
 
-  RED.nodes.registerType("magic-cube-controller", XiaomiCubeNode);
+  RED.nodes.registerType('magic-cube-controller', XiaomiCubeNode);
 };

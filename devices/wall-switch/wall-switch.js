@@ -1,8 +1,8 @@
-let battery = require('../../common/battery');
+const battery = require('../../common/battery');
 
 module.exports = function (RED) {
-  "use strict";
-  let mustache = require("mustache");
+  'use strict';
+  let mustache = require('mustache');
 
   function XiaomiWallSwitchNode(config) {
     RED.nodes.createNode(this, config);
@@ -19,29 +19,29 @@ module.exports = function (RED) {
     };
 
     //initial status
-    node.status({fill: "grey", shape: "ring", text: "battery"});
+    node.status({fill: 'grey', shape: 'ring', text: 'battery'});
 
     if (this.gateway) {
       let self = this;
       node.on('input', function (msg) {
         let payload = msg.payload;
 
-        if (payload.sid === node.sid && (payload.model.indexOf("ctrl_ln1") >= 0 || payload.model.indexOf("86sw1") >= 0)) {
+        if (payload.sid === node.sid && (payload.model.indexOf('ctrl_ln1') >= 0 || payload.model.indexOf('86sw1') >= 0)) {
           let result = null;
           let data = payload.data;
 
           //battery status
           if (data.voltage) {
-            let battery = battery.info(data.voltage);
-            node.status(battery.status);
-            persistent.voltage = battery.voltage;
-            persistent.voltage_level = battery.voltage_level;
+            let info = battery.info(data.voltage);
+            node.status(info.status);
+            persistent.voltage = info.voltage;
+            persistent.voltage_level = info.voltage_level;
           }
 
-          if (node.output === "0") {
+          if (node.output === '0') {
             //raw data
             result = payload;
-          } else if (node.output === "1") {
+          } else if (node.output === '1') {
             //only values
             result = Object.assign({
               channel_0: null,
@@ -62,9 +62,9 @@ module.exports = function (RED) {
         }
       });
     } else {
-      node.status({fill: "red", shape: "ring", text: "No gateway configured"});
+      node.status({fill: 'red', shape: 'ring', text: 'No gateway configured'});
     }
   }
 
-  RED.nodes.registerType("xiaomi-wall-switch", XiaomiWallSwitchNode);
+  RED.nodes.registerType('xiaomi-wall-switch', XiaomiWallSwitchNode);
 };
