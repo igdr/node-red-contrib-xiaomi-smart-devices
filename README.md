@@ -13,6 +13,12 @@ The following devices are currently supported:
 * Switch (Button)
 * Wall Switch (wired, wireless)
 
+# Installation
+To install this module use Node-Red GUI installer or console command:
+
+```
+npm i node-red-contrib-xiaomi-ble
+```
 
 # Example
 
