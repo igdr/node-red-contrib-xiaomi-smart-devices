@@ -1,0 +1,87 @@
+<script type="text/javascript">
+  RED.nodes.registerType('xiaomi-gateway', {
+    category: 'xiaomi',
+    color: 'rgb(192, 222, 237)',
+    defaults: {
+      gateway: {value: "", type: "xiaomi-gateway-config"},
+      name: {value: ''},
+      healthcheck: {value: 60},
+    },
+    inputs: 1,
+    outputs: 1,
+    paletteLabel: "gateway",
+    icon: "gateway.png",
+    label: function () {
+      return this.name || "Xiaomi Gateway";
+    }
+  });
+</script>
+
+<script type="text/x-red" data-template-name="xiaomi-gateway">
+    <div class="form-row">
+        <label for="node-input-gateway"><i class="icon-tag"></i> Gateway</label>
+        <input type="text" id="node-input-gateway" placeholder="Xiaomi Gateway">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-healthcheck"><i class="fa fa-clock-o"></i> Health check interval, sec</label>
+        <input type="text" id="node-input-healthcheck" placeholder="60">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="xiaomi-gateway">
+    <p>The Xiaomi Gateway</p>
+
+    <h3>Details</h3>
+    <p>The node automatically connects to the Xiaomi Gateway via UPD protocol to the <code>address</code> and <code>port</code> which should be set in the node configuration</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>Command to the Xiaomi Gateway <span class="property-type">json</span>, example: </dt>
+        <dd>
+            <pre>
+{
+  "cmd": "write",
+  "sid": "158d000128f9dd",
+  "model": "ctrl_ln1",
+  "data": {"channel_0": "on"}
+}
+            </pre>
+        </dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <p>Passes the complete json object received from the Xiaomi Gateway</p>
+
+    <p>Sample message:</p>
+    <p>
+    <pre>
+{
+   "fromip": "192.168.0.110:4321",
+   "ip": "192.168.0.110",
+   "port": 4321,
+   "payload": {
+      "cmd": "report",
+      "model": "86sw1",
+      "sid": "158d000183bd84",
+      "short_id": 64407,
+      "data": {
+        "channel_0": "click"
+      }
+   },
+   "_msgid":"a8d6c233.9d439"
+}
+    </pre>
+    </p>
+
+    <p>To be able to receive messages from the Xiaomi gateway, you need to set the gateway
+    in developer mode. Once in developer mode, the gateway sends JSON messages over the network as
+    UDP packages. On the internet their are a lot of guides on how to put the gateway in developer mode.</p>
+    <p>If you want to control devices, you need to set the key from the gateway. The key can be
+    retrieved via the Xiaomi Home App when in developer mode. Enter the key here and it is used
+    together with the token from the gateway's heartbeat message to recalculate the key to switch
+    </p>
+</script>
