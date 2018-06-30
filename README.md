@@ -4,11 +4,17 @@ This module contains the following nodes to provide easy integration of the Xiao
 
 The following devices are currently supported:
 
-* Humidity & Temperature sensor
-* Body motion sensor
-* Cube controll
-* Water leak sensor
-* Magnet contact sensor
-* Wall socket plug (zigbee)
-* Push button
-* Wall switch
+* Gateway
+* Humidity & Temperature Sensor
+* Human Body Sensor
+* Magic Cube Controller
+* Water Leak Sensor
+* Window-Door Sensor
+* Switch (Button)
+* Wall Switch (wired, wireless)
+
+
+# Example
+
+
+![Example](example.png)

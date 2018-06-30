@@ -1,0 +1,109 @@
+<script type="text/javascript">
+  RED.nodes.registerType('xiaomi-wall-switch', {
+    category: 'xiaomi',
+    color: 'rgb(192, 222, 237)',
+    defaults: {
+      gateway: {value: "", type: "xiaomi-gateway-config"},
+      name: {value: ""},
+      sid: {value: "", required: true},
+      outmsg: {value: "{{click}}"},
+      output: {value: "1"}
+    },
+    inputs: 1,
+    outputs: 1,
+    paletteLabel: "wall-switch",
+    icon: "wall-switch.png",
+    label: function () {
+      return this.name || "Xiaomi Wall Switch";
+    },
+    oneditprepare: function () {
+      let node = this;
+
+      // Get the config node id from the select box:
+      let configNodeID = $('#node-input-gateway').val();
+      // Get the config node using the ID:
+      let configNode = RED.nodes.node(configNodeID);
+
+      $(".node-input-msg").hide();
+      $("#node-input-output").val(node.output);
+
+      for (key in configNode.deviceList) {
+        let device = configNode.deviceList[key];
+        if (device.model === "wall-switch") {
+          $('#node-input-sid').append('<option value="' + device.sid + '">' + device.desc + '</option>');
+        }
+      }
+      $('#node-input-sid').val(node.sid);
+    },
+    oneditsave: function () {
+      let node = this;
+      node.sid = $("#node-input-sid").val();
+    }
+  });
+</script>
+
+<script type="text/x-red" data-template-name="xiaomi-wall-switch">
+    <div class="form-row">
+        <label for="node-input-gateway"><i class="icon-tag"></i> Gateway</label>
+        <input type="text" id="node-input-gateway" placeholder="xiaomi gateway">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-sid"><i class="icon-tag"></i> Device</label>
+        <select id="node-input-sid" placeholder="xiaomi gateway"></select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-output"><i class="icon-tag"></i> Output</label>
+        <select id="node-input-output" style="width:70%;">
+            <option value="0">Full data</option>
+            <option value="1">Just values</option>
+        </select>
+    </div>
+
+</script>
+
+<script type="text/x-red" data-help-name="xiaomi-wall-switch">
+    <p>The Xiaomi Wall Switch node</p>
+
+    <h3>Details</h3>
+    <p>The incoming json message is parsed if the type model is <code>ctrl_ln1</code> or <code>86sw1</code> and
+     the <code>sid</code> matches the configured value for this device.</p>
+    <p>Three output types are supported:
+        <ul>
+            <li>Full data</li>
+            <li>Just values</li>
+        </ul>
+    </p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">json</span>
+        </dt>
+        <dd>Gateway <code>switch</code> message of type <code>read_ack</code>, <code>heartbeat</code> or <code>report</code></dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <h4>Full data</h4>
+    <p>Passes the complete json object received from the gateway on output 1. Use this if you need the raw data.</p>
+    <h4>Just values</h4>
+    <p>Only passes the string values <code>single_click</code> on output 1 and <code>double_click</code> on output 2.</p>
+
+    <p>Sample message:</p>
+    <p><pre>
+    {
+        cmd: "report"
+        model: "wall-switch"
+        sid: "158d000128b124"
+        short_id: 56773
+        data: {
+            "status":"channel_0"
+            "voltage": 3000,
+            "voltage_level": "high"
+        }
+    }</pre></p>
+
+</script>
