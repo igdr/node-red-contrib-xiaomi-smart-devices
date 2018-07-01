@@ -29,7 +29,7 @@
 
       for (key in configNode.deviceList) {
         let device = configNode.deviceList[key];
-        if (device.model === "cube") {
+        if (device.model === "magic-cube-controller") {
           $('#node-input-sid').append('<option value="' + device.sid + '">' + device.desc + '</option>');
         }
       }

@@ -25,10 +25,9 @@ module.exports = function (RED) {
     if (this.gateway) {
       let self = this;
       node.on('input', function (msg) {
-        // let payload = JSON.parse(msg);
         let payload = msg.payload;
 
-        if (payload.sid === node.sid && payload.model.indexOf('window-door-sensor') >= 0) {
+        if (payload.sid === node.sid && payload.model.indexOf('magnet') >= 0) {
           let result = null;
           let data = payload.data;
 
