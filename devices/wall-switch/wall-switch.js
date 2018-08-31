@@ -2,7 +2,6 @@ const battery = require('../../common/battery');
 
 module.exports = function (RED) {
   'use strict';
-  let mustache = require('mustache');
 
   function XiaomiWallSwitchNode(config) {
     RED.nodes.createNode(this, config);
@@ -26,7 +25,12 @@ module.exports = function (RED) {
       node.on('input', function (msg) {
         let payload = msg.payload;
 
-        if (payload.sid === node.sid && (payload.model.indexOf('ctrl_ln1') >= 0 || payload.model.indexOf('86sw1') >= 0)) {
+        if (payload.sid === node.sid && (
+          payload.model.indexOf('ctrl_ln1') >= 0 ||
+          payload.model.indexOf('86sw1') >= 0 ||
+          payload.model.indexOf('ctrl_ln2') >= 0 ||
+          payload.model.indexOf('86sw2') >= 0)
+        ) {
           let result = null;
           let data = payload.data;
 
@@ -45,12 +49,16 @@ module.exports = function (RED) {
             //only values
             result = Object.assign({
               channel_0: null,
+              channel_1: null,
               device: null,
               time: null
             }, persistent);
 
             if (data.channel_0) {
               result.channel_0 = data.channel_0;
+            }
+            if (data.channel_1) {
+              result.channel_1 = data.channel_1;
             }
 
             result.time = new Date().getTime();
