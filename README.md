@@ -11,7 +11,7 @@ The following devices are currently supported:
 * Water Leak Sensor
 * Window-Door Sensor
 * Switch (Button)
-* Wall Switch (wired, wireless)
+* Wall Switch (one key, tho keys, wired, wireless)
 
 # Installation
 To install this module use Node-Red GUI installer or console command:
