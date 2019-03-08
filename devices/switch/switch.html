@@ -5,10 +5,11 @@
     defaults: {
       gateway: {value: "", type: "xiaomi-gateway-config"},
       name: {value: ""},
+      key: {value: "", required: true},
       sid: {value: "", required: true},
+      output: {value: "1"},
       outmsg: {value: "{{click}}"},
       outmsgdbcl: {value: "{{double_click}}"},
-      output: {value: "1"}
     },
     inputs: 1,
     outputs: 1,
@@ -35,18 +36,13 @@
 
       $(".node-input-msg").hide();
       $("#node-input-output").val(node.output);
-
-      for (key in configNode.deviceList) {
-        let device = configNode.deviceList[key];
-        if (device.model === "switch") {
-          $('#node-input-sid').append('<option value="' + device.sid + '">' + device.desc + '</option>');
-        }
-      }
       $('#node-input-sid').val(node.sid);
+      $('#node-input-key').val(node.key);
     },
     oneditsave: function () {
       let node = this;
       node.sid = $("#node-input-sid").val();
+      node.key = $("#node-input-key").val();
     }
   });
 </script>
@@ -61,8 +57,12 @@
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
     <div class="form-row">
-        <label for="node-input-sid"><i class="icon-tag"></i> Device</label>
-        <select id="node-input-sid" placeholder="xiaomi gateway"></select>
+        <label for="node-input-sid"><i class="icon-tag"></i> SID</label>
+        <input type="text" id="node-input-sid" placeholder="SID"></text>
+    </div>
+    <div class="form-row">
+        <label for="node-input-key"><i class="icon-tag"></i> Device</label>
+        <input type="text" id="node-input-key" placeholder="Device Key/Name"></text>
     </div>
     <div class="form-row">
         <label for="node-input-output"><i class="icon-tag"></i> Output</label>

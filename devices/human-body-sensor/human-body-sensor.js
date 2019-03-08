@@ -64,7 +64,7 @@ module.exports = function (RED) {
             }
 
             result.time = new Date().getTime();
-            result.device = self.gateway.getDeviceName(self.sid);
+            result.device = self.self.key;
           } else if (node.output === '2') {
             //template
             if (data.status === 'motion') {

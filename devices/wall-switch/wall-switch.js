@@ -62,7 +62,7 @@ module.exports = function (RED) {
             }
 
             result.time = new Date().getTime();
-            result.device = self.gateway.getDeviceName(self.sid);
+            result.device = self.self.key;
           }
 
           msg.payload = result;

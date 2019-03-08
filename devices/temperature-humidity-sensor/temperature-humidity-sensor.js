@@ -7,6 +7,7 @@ module.exports = function (RED) {
     RED.nodes.createNode(this, config);
     this.gateway = RED.nodes.getNode(config.gateway);
     this.sid = config.sid;
+    this.key = config.key;
     this.output = config.output;
 
     let node = this;
@@ -61,7 +62,7 @@ module.exports = function (RED) {
             result = persistent;
 
             result.time = new Date().getTime();
-            result.device = self.gateway.getDeviceName(self.sid);
+            result.device = self.key;
           }
 
           msg.payload = result;

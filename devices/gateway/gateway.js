@@ -1,52 +1,58 @@
 'use strict';
 
+const Aqara = require('lumi-aqara');
 const battery = require('../../common/battery');
 const dgram = require('dgram');
 const crypto = require('crypto');
 
+/**
+ * @param <Buffer> message
+ * @param <Object> rinfo
+ *
+ * @returns Object
+ */
+function createMessage(message, rinfo) {
+  let payload = JSON.parse(message.toString());
+  if (payload.data) {
+    payload.data = JSON.parse(payload.data);
+  }
+
+  return {
+    fromip: `${rinfo.address}:${rinfo.port}`,
+    ip: rinfo.address,
+    port: rinfo.port,
+    payload: payload
+  };
+}
+
+/**
+ * @param {string} key
+ * @param {Object} msg
+ * @returns {String}
+ */
+function getGatewayToken(key, msg) {
+  let result = null;
+
+  //get gateway key
+  if (key) {
+    let token = msg.payload.token;
+    if (token) {
+      let cipher = crypto.createCipheriv('aes128', key, (new Buffer('17996d093d28ddb3ba695a2e6f58562e', 'hex')));
+      let encoded_string = cipher.update(token, 'utf8', 'hex');
+
+      encoded_string += cipher.final('hex');
+      result = encoded_string.substring(0, 32);
+    }
+  }
+
+  return result;
+}
+
+/**
+ * @param {RED} RED
+ */
 module.exports = function (RED) {
-
-  /**
-   * @param <Buffer> message
-   * @param <Object> rinfo
-   *
-   * @returns Object
-   */
-  function createMessage(message, rinfo) {
-    let payload = JSON.parse(message.toString());
-    if (payload.data) {
-      payload.data = JSON.parse(payload.data);
-    }
-
-    return {
-      fromip: `${rinfo.address}:${rinfo.port}`,
-      ip: rinfo.address,
-      port: rinfo.port,
-      payload: payload
-    };
-  }
-
-  /**
-   * @param {Object} msg
-   * @returns {String}
-   */
-  function getGatewayToken(key, msg) {
-    let result = null;
-
-    //get gateway key
-    if (key) {
-      let token = msg.payload.token;
-      if (token) {
-        let cipher = crypto.createCipheriv('aes128', key, (new Buffer('17996d093d28ddb3ba695a2e6f58562e', 'hex')));
-        let encoded_string = cipher.update(token, 'utf8', 'hex');
-
-        encoded_string += cipher.final('hex');
-        result = encoded_string.substring(0, 32);
-      }
-    }
-
-    return result;
-  }
+  let udpInputPortsInUse = {};
 
   /**
    * @param {Object} config
@@ -66,15 +72,23 @@ module.exports = function (RED) {
       this.status({fill: 'grey', shape: 'ring', text: 'not connected'});
 
       //initialize connection
-      const socket = dgram.createSocket({type: 'udp4'});
-      socket.bind(this.gateway.port);
+      let socket;
+      if (!udpInputPortsInUse.hasOwnProperty(this.port)) {
+        socket = dgram.createSocket({type: 'udp4'});  // default to udp4
+        socket.bind(this.gateway.port);
+        udpInputPortsInUse[this.port] = socket;
+      }
+      else {
+        this.warn('UDP socket is aleady used, try to reuse', this.port);
+        socket = udpInputPortsInUse[this.port];  // re-use existing
+      }
 
       socket.on('listening', () => {
         socket.addMembership(this.gateway.address);
+
+        //debug
         const address = socket.address();
-        console.log(
-          `UDP socket listening on ${address.address}:${address.port}`
-        );
+        console.log(`UDP socket listening on ${address.address}:${address.port}`);
 
         //initial status
         this.status({fill: 'green', shape: 'ring', text: 'connected'});
@@ -93,10 +107,28 @@ module.exports = function (RED) {
           clearTimeout(timer);
           timer = setTimeout(() => {
             this.status({fill: 'red', shape: 'ring', text: 'healthcheck failed'});
-          }, this.healthcheck * 1000)
+          }, this.healthcheck * 1000);
+
+          return;
         }
 
-        this.send([msg]);
+        //listen for node close message and free socket
+        this.on("close", () => {
+          if (udpInputPortsInUse.hasOwnProperty(this.port)) {
+            delete udpInputPortsInUse[this.port];
+          }
+          try {
+            socket.close();
+            this.log('UDP socket closed');
+          } catch (err) {
+            //this.error(err);
+          }
+        });
+
+        //send message
+        if (msg.payload.cmd == 'report' || msg.payload.cmd == 'heartbeat') {
+          this.send([msg]);
+        }
       });
 
       //listen for incomming messages
@@ -122,5 +154,11 @@ module.exports = function (RED) {
     }
   }
 
+  //gets sockets
+  RED.httpAdmin.get('/udp-ports/:id', RED.auth.needsPermission('udp-ports.read'), (req, res) => {
+    res.json(Object.keys(udpInputPortsInUse));
+  });
+
+  //register new type
   RED.nodes.registerType('xiaomi-gateway', XiaomiGatewayNode);
 };
