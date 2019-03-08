@@ -66,7 +66,7 @@ module.exports = function (RED) {
       this.status({fill: 'grey', shape: 'ring', text: 'not connected'});
 
       //initialize connection
-      const socket = dgram.createSocket({type: 'udp4', reuseAddr: true});
+      const socket = dgram.createSocket({type: 'udp4'});
       socket.bind(this.gateway.port);
 
       socket.on('listening', () => {
