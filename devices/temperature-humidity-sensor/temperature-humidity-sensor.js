@@ -63,6 +63,8 @@ module.exports = function (RED) {
 
             result.time = new Date().getTime();
             result.device = self.key;
+            result.sid = payload.sid;
+            result.model = payload.model;
           }
 
           msg.payload = result;

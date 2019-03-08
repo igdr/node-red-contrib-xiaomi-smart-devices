@@ -52,8 +52,10 @@ module.exports = function (RED) {
               result.status = data.status;
             }
 
-            result.device = self.key;
             result.time = new Date().getTime();
+            result.device = self.key;
+            result.sid = payload.sid;
+            result.model = payload.model;
           } else if (node.output === '2') {
             //template
             if (data.status && data.status === 'click') {
