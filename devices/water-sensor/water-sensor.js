@@ -24,9 +24,8 @@ module.exports = function (RED) {
     node.status({fill: 'grey', shape: 'ring', text: 'battery'});
 
     if (this.gateway) {
-      let self = this;
-      node.on('input', function (msg) {
-        // let payload = JSON.parse(msg);
+      this.gateway.on('message', (input) => {
+        let msg = Object.assign({}, input);
         let payload = msg.payload;
 
         if (payload.sid === node.sid && payload.model.indexOf('sensor_wleak') >= 0) {
@@ -55,7 +54,7 @@ module.exports = function (RED) {
             }
 
             result.time = new Date().getTime();
-            result.device = self.key;
+            result.device = this.key;
             result.sid = payload.sid;
             result.model = payload.model;
           } else if (node.output === '2') {

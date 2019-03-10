@@ -23,8 +23,8 @@ module.exports = function (RED) {
     node.status({fill: 'grey', shape: 'ring', text: 'battery'});
 
     if (this.gateway) {
-      let self = this;
-      node.on('input', function (msg) {
+      this.gateway.on('message', (input) => {
+        let msg = Object.assign({}, input);
         let payload = msg.payload;
 
         if (payload.sid === node.sid && (payload.model.indexOf('sensor_ht') >= 0 || payload.model.indexOf('weather') >= 0)) {
@@ -62,7 +62,7 @@ module.exports = function (RED) {
             result = persistent;
 
             result.time = new Date().getTime();
-            result.device = self.key;
+            result.device = this.key;
             result.sid = payload.sid;
             result.model = payload.model;
           }

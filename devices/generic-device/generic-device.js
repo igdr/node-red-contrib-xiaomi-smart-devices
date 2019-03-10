@@ -19,13 +19,13 @@ module.exports = function (RED) {
     node.status({fill: 'grey', shape: 'ring', text: 'battery'});
 
     if (this.gateway) {
-      let self = this;
-      node.on('input', function (msg) {
+      this.gateway.on('message', (input) => {
+        let msg = Object.assign({}, input);
         let payload = msg.payload;
 
         if (payload.sid === node.sid) {
           let result = null;
-          let data = payload.data;
+          let data = payload.data || {};
 
           //battery status
           if (data.voltage) {
@@ -40,9 +40,9 @@ module.exports = function (RED) {
             result = payload;
           } else if (node.output === '1') {
             //values
-            result = Object.assign(data, persistent);
+            result = Object.assign({}, data, persistent);
             result.time = new Date().getTime();
-            result.device = self.key;
+            result.device = this.key;
             result.sid = payload.sid;
             result.model = payload.model;
           }
