@@ -72,18 +72,21 @@ module.exports = function (RED) {
 
       //initialize connection
       let socket;
+      let reuse = false;
       if (!udpInputPortsInUse.hasOwnProperty(this.port)) {
         socket = dgram.createSocket({type: 'udp4'});  // default to udp4
         socket.bind(this.gateway.port);
         udpInputPortsInUse[this.port] = socket;
-      }
-      else {
+      } else {
         this.log('UDP socket is aleady used, try reusing existing', this.port);
         socket = udpInputPortsInUse[this.port];  // re-use existing
+        reuse = true;
       }
 
       socket.on('listening', () => {
-        socket.addMembership(this.gateway.address);
+        if (false === reuse) {
+          socket.addMembership(this.gateway.address);
+        }
 
         //debug
         const address = socket.address();
@@ -111,22 +114,22 @@ module.exports = function (RED) {
           return;
         }
 
-        //listen for node close message and free socket
-        this.on("close", () => {
-          if (udpInputPortsInUse.hasOwnProperty(this.port)) {
-            delete udpInputPortsInUse[this.port];
-          }
-          try {
-            socket.close();
-            this.log('UDP socket closed');
-          } catch (err) {
-            //this.error(err);
-          }
-        });
-
         //send message
         if (msg.payload.cmd == 'report' || msg.payload.cmd == 'heartbeat') {
           this.send([msg]);
+        }
+      });
+
+      //listen for node close message and free socket
+      this.on("close", () => {
+        if (udpInputPortsInUse.hasOwnProperty(this.port)) {
+          delete udpInputPortsInUse[this.port];
+        }
+        try {
+          socket.close();
+          this.log('UDP socket closed');
+        } catch (err) {
+          //this.error(err);
         }
       });
 
