@@ -8,7 +8,6 @@ module.exports = function (RED) {
     RED.nodes.createNode(this, config);
     this.gateway = RED.nodes.getNode(config.gateway);
     this.sid = config.sid;
-    this.key = config.key;
     this.output = config.output;
     this.outmsg = config.outmsg;
     this.outmsgdbcl = config.outmsgdbcl;
@@ -52,8 +51,8 @@ module.exports = function (RED) {
               result.status = data.status;
             }
 
-            result.device = self.key;
             result.time = new Date().getTime();
+            result.device = self.gateway.getDeviceName(self.sid);
           } else if (node.output === '2') {
             //template
             if (data.status && data.status === 'click') {
@@ -65,7 +64,6 @@ module.exports = function (RED) {
             }
           }
 
-          //send result message
           msg.payload = result;
           node.send([msg]);
         }

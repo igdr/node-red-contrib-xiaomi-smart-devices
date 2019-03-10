@@ -1,6 +1,5 @@
 'use strict';
 
-const Aqara = require('lumi-aqara');
 const battery = require('../../common/battery');
 const dgram = require('dgram');
 const crypto = require('crypto');
@@ -79,7 +78,7 @@ module.exports = function (RED) {
         udpInputPortsInUse[this.port] = socket;
       }
       else {
-        this.warn('UDP socket is aleady used, try to reuse', this.port);
+        this.log('UDP socket is aleady used, try reusing existing', this.port);
         socket = udpInputPortsInUse[this.port];  // re-use existing
       }
 
@@ -88,7 +87,7 @@ module.exports = function (RED) {
 
         //debug
         const address = socket.address();
-        console.log(`UDP socket listening on ${address.address}:${address.port}`);
+        this.log(`UDP socket listening on ${address.address}:${address.port}`);
 
         //initial status
         this.status({fill: 'green', shape: 'ring', text: 'connected'});
@@ -140,7 +139,7 @@ module.exports = function (RED) {
 
           const message = Buffer.from(JSON.stringify(cmd));
           socket.send(message, 0, message.length, this.gateway.port, this.gateway.address, function () {
-            console.info(`Sending message '${message}'`);
+            this.info(`Sending message '${message}'`);
           });
         } else {
           this.status({fill: 'red', shape: 'ring', text: 'key is not set'});

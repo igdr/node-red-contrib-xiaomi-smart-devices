@@ -53,7 +53,7 @@ module.exports = function (RED) {
             }
 
             result.time = new Date().getTime();
-            result.device = self.self.key;
+            result.device = self.gateway.getDeviceName(self.sid);
           } else if (node.output === '2') {
             //template
             if (data.status && data.status === 'open') {
