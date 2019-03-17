@@ -1,4 +1,4 @@
-# node-red-contrib-xiaomi-smart-devices
+# node-red-contrib-xiaomi-smart-devices v2
 
 This module contains the following nodes to provide easy integration of the Xiaomi devices into node-red.
 
