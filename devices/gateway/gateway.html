@@ -4,6 +4,7 @@
     color: 'rgb(192, 222, 237)',
     defaults: {
       gateway: {value: "", type: "xiaomi-gateway-config"},
+      sid: {value: '', required: true},
       name: {value: ''},
       healthcheck: {value: 60},
     },
@@ -27,6 +28,10 @@
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
     <div class="form-row">
+        <label for="node-input-sid"><i class="icon-tag"></i> SID</label>
+        <input type="text" id="node-input-sid" placeholder="SID"></input>
+    </div>
+    <div class="form-row">
         <label for="node-input-healthcheck"><i class="fa fa-clock-o"></i> Health check interval, sec</label>
         <input type="text" id="node-input-healthcheck" placeholder="60">
     </div>
@@ -44,10 +49,8 @@
         <dd>
             <pre>
 {
-  "cmd": "write",
-  "sid": "158d000128f9dd",
-  "model": "ctrl_ln1",
-  "data": {"channel_0": "on"}
+  "mid": 1,
+  "vol": 100
 }
             </pre>
         </dd>

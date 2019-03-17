@@ -7,41 +7,22 @@
       name: {value: ""},
       sid: {value: "", required: true},
       key: {value: "", required: true},
-      outmsg: {value: "{{click}}"},
-      output: {value: "1"}
+      model: {value: "", required: true},
+      allow_input: {value: false}
     },
     inputs: 1,
     outputs: 1,
     paletteLabel: "wall-switch",
     icon: "wall-switch.png",
     label: function () {
+      this.inputs = this.allow_input ? 1 : 0;
       return this.name || "Xiaomi Wall Switch";
     },
     oneditprepare: function () {
       let node = this;
-
-      // Get the config node id from the select box:
-      let configNodeID = $('#node-input-gateway').val();
-      // Get the config node using the ID:
-      let configNode = RED.nodes.node(configNodeID);
-
-      $('#node-input-output').change(function () {
-        if ($(this).val() === '2') {
-          $('.node-input-msg').show();
-        } else {
-          $('.node-input-msg').hide();
-        }
+      $('#node-input-model').change(function () {
+        node.allow_input = $(this).find('option:selected').data('inputs');
       });
-
-      $(".node-input-msg").hide();
-      $("#node-input-output").val(node.output);
-      $('#node-input-sid').val(node.sid);
-      $('#node-input-key').val(node.key);
-    },
-    oneditsave: function () {
-      let node = this;
-      node.sid = $("#node-input-sid").val();
-      node.key = $("#node-input-key").val();
     }
   });
 </script>
@@ -57,19 +38,23 @@
     </div>
     <div class="form-row">
         <label for="node-input-sid"><i class="icon-tag"></i> SID</label>
-        <input type="text" id="node-input-sid" placeholder="SID"></text>
+        <input type="text" id="node-input-sid" placeholder="SID"></input>
     </div>
     <div class="form-row">
         <label for="node-input-key"><i class="icon-tag"></i> Device</label>
         <input type="text" id="node-input-key" placeholder="Device Key/Name"></text>
     </div>
     <div class="form-row">
-        <label for="node-input-output"><i class="icon-tag"></i> Output</label>
-        <select id="node-input-output" style="width:70%;">
-            <option value="0">Full data</option>
-            <option value="1">Just values</option>
+        <label for="node-input-model"><i class="icon-tag"></i> Type</label>
+        <select id="node-input-model" style="width:70%;">
+            <option value="wired_single_button" data-inputs="1">Wired: Single-Button</option>
+            <option value="wired_double_button" data-inputs="1">Wired: Double-Buttons</option>
+            <option value="wireless_single_button" data-inputs="0">Wireless Single-Button</option>
+            <option value="wireless_double_button" data-inputs="0">Wireless: Double-Buttons</option>
         </select>
     </div>
+
+
 
 </script>
 
@@ -79,7 +64,7 @@
     <h3>Details</h3>
     <p>The incoming json message is parsed if the type model is <code>ctrl_ln1</code> or <code>86sw1</code> and
      the <code>sid</code> matches the configured value for this device.</p>
-    <p>Three output types are supported:
+    <p>Four models are supported:
         <ul>
             <li>Full data</li>
             <li>Just values</li>
@@ -113,5 +98,7 @@
             "voltage_level": "high"
         }
     }</pre></p>
+
+
 
 </script>

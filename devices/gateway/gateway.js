@@ -1,14 +1,6 @@
 'use strict';
 
-const battery = require('../../common/battery');
-const crypto = require('crypto');
-
-
-/**
- * @param {RED} RED
- */
 module.exports = function (RED) {
-  let udpInputPortsInUse = {};
 
   /**
    * @param {Object} config
@@ -16,36 +8,47 @@ module.exports = function (RED) {
    */
   function XiaomiGatewayNode(config) {
     RED.nodes.createNode(this, config);
+    this.sid = config.sid;
+    this.healthcheck = config.healthcheck * 1000 || 60000;
+    this.timer = null;
 
     this.gateway = RED.nodes.getNode(config.gateway);
-    this.healthcheck = parseInt(config.healthcheck) || 60;
-
-    let currentToken = null;
-    let timer;
-
-    if (this.gateway && this.gateway.address && this.gateway.port) {
+    if (this.gateway) {
       //initial status
       this.status({fill: 'grey', shape: 'ring', text: 'not connected'});
 
-      
+      //listen for the gateway messages
+      this.gateway.on('message', (input) => {
+        let msg = Object.assign({}, input);
+        let payload = msg.payload;
 
-      // //listen for incomming messages
-      // this.on('input', function (msg) {
-      //   if (this.gateway.key && currentToken) {
-      //     let cmd = msg.payload;
-      //     cmd.data.key = currentToken;
-      //     cmd.data = JSON.stringify(cmd.data);
-      //
-      //     const message = Buffer.from(JSON.stringify(cmd));
-      //     socket.send(message, 0, message.length, this.gateway.port, this.gateway.address, function () {
-      //       console.info(`Sending message '${message}'`);
-      //     });
-      //   } else {
-      //     this.status({fill: 'red', shape: 'ring', text: 'key is not set'});
-      //   }
-      //
-      //   return [null];
-      // })
+        switch (payload.cmd) {
+          case 'heartbeat' :
+            this.status({fill: 'green', shape: 'ring', text: 'connected'});
+
+            clearTimeout(this.timer);
+            this.timer = setTimeout(() => {
+              this.status({fill: 'grey', shape: 'ring', text: 'not connected'});
+            }, this.healthcheck);
+            break;
+
+
+          default:
+            this.send([msg]);
+            break;
+        }
+      });
+
+      //listen for incoming messages
+      this.on('input', function (msg) {
+        msg.payload = {
+          sid: this.sid,
+          cmd: 'write',
+          model: 'gateway',
+          data: msg.payload
+        };
+        this.gateway.sendCommand(msg.payload);
+      });
     } else {
       //initial status
       this.status({fill: 'grey', shape: 'ring', text: 'not configured'});

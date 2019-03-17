@@ -15,32 +15,6 @@
     icon: "arrow",
     label: function () {
       return this.name || "Xiaomi Generic Device";
-    },
-    oneditprepare: function () {
-      let node = this;
-
-      // Get the config node id from the select box:
-      let configNodeID = $('#node-input-gateway').val();
-      // Get the config node using the ID:
-      let configNode = RED.nodes.node(configNodeID);
-
-      $('#node-input-output').change(function () {
-        if ($(this).val() === '2') {
-          $('.node-input-msg').show();
-        } else {
-          $('.node-input-msg').hide();
-        }
-      });
-
-      $(".node-input-msg").hide();
-      $("#node-input-output").val(node.output);
-      $('#node-input-key').val(node.key);
-      $('#node-input-sid').val(node.sid);
-    },
-    oneditsave: function () {
-      let node = this;
-      node.sid = $("#node-input-sid").val();
-      node.key = $("#node-input-key").val();
     }
   });
 </script>
@@ -56,7 +30,7 @@
     </div>
     <div class="form-row">
         <label for="node-input-sid"><i class="icon-tag"></i> SID</label>
-        <input type="text" id="node-input-sid" placeholder="SID"></text>
+        <input type="text" id="node-input-sid" placeholder="SID"></input>
     </div>
     <div class="form-row">
         <label for="node-input-key"><i class="icon-tag"></i> Device</label>

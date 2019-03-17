@@ -1,81 +1,38 @@
-const battery = require('../../common/battery');
+const factory = require('../factory');
 
-module.exports = function (RED) {
-  'use strict';
-
-  function XiaomiTemperatureHumiditySensorNode(config) {
-    RED.nodes.createNode(this, config);
-    this.gateway = RED.nodes.getNode(config.gateway);
-    this.sid = config.sid;
-    this.key = config.key;
-    this.output = config.output;
-
-    let node = this;
-    let persistent = {
-      'temperature': null,
-      'humidity': null,
-      'pressure': null,
-      'voltage': null,
-      'voltage_level': null
-    };
-
-    //initial status
-    node.status({fill: 'grey', shape: 'ring', text: 'battery'});
-
-    if (this.gateway) {
-      this.gateway.on('message', (input) => {
-        let msg = Object.assign({}, input);
-        let payload = msg.payload;
-
-        if (payload.sid === node.sid && (payload.model.indexOf('sensor_ht') >= 0 || payload.model.indexOf('weather') >= 0)) {
-          let result = null;
-          let data = payload.data;
-
-          //battery status
-          if (data.voltage) {
-            let info = battery.info(data.voltage);
-            node.status(info.status);
-            persistent.voltage = info.voltage;
-            persistent.voltage_level = info.voltage_level;
-          }
-
-          //temperature
-          if (data.temperature) {
-            persistent.temperature = data.temperature / 100;
-          }
-
-          //humidity
-          if (data.humidity) {
-            persistent.humidity = data.humidity / 100;
-          }
-
-          //pressure
-          if (data.pressure) {
-            persistent.pressure = data.pressure;
-          }
-
-          if (node.output === '0') {
-            //raw data
-            result = payload;
-          } else if (node.output === '1') {
-            //values
-            result = persistent;
-
-            result.time = new Date().getTime();
-            result.device = this.key;
-            result.sid = payload.sid;
-            result.model = payload.model;
-          }
-
-          msg.payload = result;
-          node.send([msg]);
-        }
-      });
-    } else {
-      node.status({fill: 'red', shape: 'ring', text: 'No gateway configured'});
-    }
-
+/**
+ * @param {object} data
+ */
+function extractor(data) {
+  //temperature
+  if (data.temperature) {
+    data.temperature = data.temperature / 100;
   }
 
-  RED.nodes.registerType('xiaomi-temperature-humidity-sensor', XiaomiTemperatureHumiditySensorNode);
+  //humidity
+  if (data.humidity) {
+    data.humidity = Math.round(data.humidity / 100);
+  }
+
+  return data;
+}
+
+/**
+ * @param {Red} RED
+ */
+module.exports = function (RED) {
+
+  function XiaomiTemperatureHumiditySensor(config) {
+    //create the node-red node
+    RED.nodes.createNode(this, config);
+
+    //create the device
+    factory(RED, this, config, {
+      extractor: extractor,
+      persistence: ['temperature', 'humidity', 'pressure'],
+      send_on_ready: true
+    });
+  }
+
+  RED.nodes.registerType('xiaomi-temperature-humidity-sensor', XiaomiTemperatureHumiditySensor);
 };

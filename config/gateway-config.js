@@ -2,8 +2,8 @@ const dgram = require('dgram');
 const crypto = require('crypto');
 
 /**
- * @param <Buffer> message
- * @param <Object> rinfo
+ * @param {object} message
+ * @param {object} rinfo
  *
  * @returns Object
  */
@@ -44,6 +44,7 @@ function getGatewayToken(key, msg) {
   return result;
 }
 
+
 module.exports = function (RED) {
   let udpInputPortsInUse = {};
 
@@ -53,43 +54,71 @@ module.exports = function (RED) {
     this.key = config.key;
     this.port = config.port || 9898;
     this.address = config.address || '224.0.0.50';
+    this.currentToken = null;
+    this.ready = false;
+
+    /**
+     * @param {object} input
+     */
+    this.sendCommand = (input) => {
+      if (this.key && this.currentToken) {
+        let cmd = Object.assign({}, input);
+        cmd.data = cmd.data || {};
+        cmd.data.key = this.currentToken;
+        cmd.data = JSON.stringify(cmd.data);
+
+        const message = Buffer.from(JSON.stringify(cmd));
+        socket.send(message, 0, message.length, this.port, this.address, function () {
+          console.info(`Sending message '${message}'`);
+        });
+      } else {
+        this.error('key is not set');
+      }
+    };
 
     //initialize connection
     let socket;
+    let reuse = false;
     if (!udpInputPortsInUse.hasOwnProperty(this.port)) {
       socket = dgram.createSocket({type: 'udp4'});  // default to udp4
       socket.bind(this.port);
       udpInputPortsInUse[this.port] = socket;
-    }
-    else {
+    } else {
       console.warn('UDP socket is aleady used, try to reuse', this.port);
       socket = udpInputPortsInUse[this.port];  // re-use existing
+      reuse = true;
     }
 
     socket.on('listening', () => {
-      socket.addMembership(this.address);
+      if (false === reuse) {
+        socket.addMembership(this.address);
+      }
 
       //debug
       const address = socket.address();
       this.log(`UDP socket listening on ${address.address}:${address.port}`);
 
       //initial status
-      this.status({fill: 'green', shape: 'ring', text: 'connected'});
+      this.status({fill: 'grey', shape: 'ring', text: 'connected'});
     });
 
-    let currentToken = null;
     socket.on('message', (message, rinfo) => {
       let msg = createMessage(message, rinfo);
 
-      //get token
-      if (msg.payload.cmd === 'heartbeat' && msg.payload.model === 'gateway') {
-        currentToken = getGatewayToken(this.key, msg);
+      if (msg.payload.token) {
+        //update token
+        this.currentToken = getGatewayToken(this.key, msg);
+
+        if (false === this.ready) {
+          this.emit('ready');
+          this.ready = true;
+        }
       }
 
       this.emit('message', msg);
     });
 
-    //listen for node close message and free socket
+    //listen for node close onMessage and free socket
     this.on("close", () => {
       if (udpInputPortsInUse.hasOwnProperty(this.port)) {
         delete udpInputPortsInUse[this.port];
@@ -98,7 +127,6 @@ module.exports = function (RED) {
         socket.close();
         this.log('UDP socket closed');
       } catch (err) {
-        //this.error(err);
       }
     });
   }

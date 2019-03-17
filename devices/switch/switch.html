@@ -17,32 +17,6 @@
     icon: "switch.png",
     label: function () {
       return this.name || "Xiaomi Switch";
-    },
-    oneditprepare: function () {
-      let node = this;
-
-      // Get the config node id from the select box:
-      let configNodeID = $('#node-input-gateway').val();
-      // Get the config node using the ID:
-      let configNode = RED.nodes.node(configNodeID);
-
-      $("#node-input-output").change(function () {
-        if ($(this).val() == "2") {
-          $(".node-input-msg").show();
-        } else {
-          $(".node-input-msg").hide();
-        }
-      });
-
-      $(".node-input-msg").hide();
-      $("#node-input-output").val(node.output);
-      $('#node-input-sid').val(node.sid);
-      $('#node-input-key').val(node.key);
-    },
-    oneditsave: function () {
-      let node = this;
-      node.sid = $("#node-input-sid").val();
-      node.key = $("#node-input-key").val();
     }
   });
 </script>
@@ -58,7 +32,7 @@
     </div>
     <div class="form-row">
         <label for="node-input-sid"><i class="icon-tag"></i> SID</label>
-        <input type="text" id="node-input-sid" placeholder="SID"></text>
+        <input type="text" id="node-input-sid" placeholder="SID"></input>
     </div>
     <div class="form-row">
         <label for="node-input-key"><i class="icon-tag"></i> Device</label>
@@ -69,18 +43,8 @@
         <select id="node-input-output" style="width:70%;">
             <option value="0">Full data</option>
             <option value="1">Just values</option>
-            <option value="2">Template</option>
         </select>
     </div>
-    <div class="form-row node-input-msg">
-        <label for="node-input-outmsg"><i class="fa fa-hand-pointer-o"></i> Single-click</label>
-        <input type="text" id="node-input-outmsg">
-    </div>
-    <div class="form-row node-input-msg">
-        <label for="node-input-outmsgdbcl"><i class="fa fa-hand-peace-o"></i> Double-click</label>
-        <input type="text" id="node-input-outmsgdbcl">
-    </div>
-
 </script>
 
 <script type="text/x-red" data-help-name="xiaomi-switch">
@@ -93,7 +57,6 @@
         <ul>
             <li>Full data</li>
             <li>Just values</li>
-            <li>Template</li>
         </ul>
     </p>
 
@@ -110,9 +73,6 @@
     <p>Passes the complete json object received from the gateway on output 1. Use this if you need the raw data.</p>
     <h4>Just values</h4>
     <p>Only passes the string values <code>single_click</code> on output 1 and <code>double_click</code> on output 2.</p>
-    <h4>Template</h4>
-    <p>Use your own template to pass the values on. The template can contain <a href="http://mustache.github.io/mustache.5.html">mustache-style</a> tags.
-        Any property from the data section of the full object can be used.</p>
 
     <p>Sample message:</p>
     <p><pre>

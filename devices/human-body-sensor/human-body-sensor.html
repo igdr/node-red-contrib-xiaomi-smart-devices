@@ -17,32 +17,6 @@
     icon: 'human-body-sensor.png',
     label: function () {
       return this.name || 'Xiaomi Human Body Sensor';
-    },
-    oneditprepare: function () {
-      let node = this;
-
-      // Get the config node id from the select box:
-      let configNodeID = $('#node-input-gateway').val();
-      // Get the config node using the ID:
-      let configNode = RED.nodes.node(configNodeID);
-
-      $('#node-input-output').change(function () {
-        if ($(this).val() === '2') {
-          $('.node-input-msg').show();
-        } else {
-          $('.node-input-msg').hide();
-        }
-      });
-
-      $(".node-input-msg").hide();
-      $("#node-input-output").val(node.output);
-      $('#node-input-key').val(node.key);
-      $('#node-input-sid').val(node.sid);
-    },
-    oneditsave: function () {
-      let node = this;
-      node.sid = $('#node-input-sid').val();
-      node.key = $("#node-input-key").val();
     }
   });
 </script>
@@ -58,7 +32,7 @@
     </div>
     <div class="form-row">
         <label for="node-input-sid"><i class="icon-tag"></i> SID</label>
-        <input type="text" id="node-input-sid" placeholder="SID"></text>
+        <input type="text" id="node-input-sid" placeholder="SID"></input>
     </div>
     <div class="form-row">
         <label for="node-input-key"><i class="icon-tag"></i> Device</label>
@@ -69,16 +43,7 @@
         <select id="node-input-output" style="width:70%;">
             <option value="0">Full data</option>
             <option value="1">Just values</option>
-            <option value="2">Template</option>
         </select>
-    </div>
-    <div class="form-row node-input-msg">
-        <label for="node-input-motionmsg"><i class="fa fa-rss"></i> Motion msg</label>
-        <input type="text" id="node-input-motionmsg">
-    </div>
-    <div class="form-row node-input-msg">
-        <label for="node-input-nomotionmsg"><i class="fa fa-circle"></i> No motion msg</label>
-        <input type="text" id="node-input-nomotionmsg">
     </div>
 </script>
 
@@ -91,7 +56,6 @@
         <ul>
             <li>Full data</li>
             <li>Just values</li>
-            <li>Template</li>
         </ul>
     </p>
 
@@ -108,9 +72,6 @@
     <p>Passes the complete json object received from the gateway. Use this if you need the raw data.</p>
     <h4>Just values</h4>
     <p>Only passes the values <code>motion</code> or <code>no_motion</code>. In case of <code>no_motion</code> also the duration object is passed on output 2.</p>
-    <h4>Template</h4>
-    <p>Use your own template to pass the values on. The template can contain <a href="http://mustache.github.io/mustache.5.html">mustache-style</a> tags.
-        Any property from the data section of the full object can be used.</p>
 
     <p>Sample message:</p>
     <p><pre>

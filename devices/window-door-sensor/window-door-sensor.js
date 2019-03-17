@@ -1,84 +1,17 @@
-const battery = require('../../common/battery');
+const factory = require('../factory');
 
+/**
+ * @param {Red} RED
+ */
 module.exports = function (RED) {
-  'use strict';
-  let mustache = require('mustache');
 
-  function XiaomiWindowDoorSensorNode(config) {
+  function XiaomiWindowDoorSensor(config) {
+    //create the node-red node
     RED.nodes.createNode(this, config);
-    this.gateway = RED.nodes.getNode(config.gateway);
-    this.sid = config.sid;
-    this.key = config.key;
-    this.output = config.output;
-    this.openmsg = config.openmsg;
-    this.closemsg = config.closemsg;
 
-    let node = this;
-    let persistent = {
-      'previous_status': null,
-      'voltage': null,
-      'voltage_level': null
-    };
-
-    //initial status
-    node.status({fill: 'grey', shape: 'ring', text: 'battery'});
-
-    if (this.gateway) {
-      this.gateway.on('message', (input) => {
-        let msg = Object.assign({}, input);
-        let payload = msg.payload;
-
-        if (payload.sid === node.sid && payload.model.indexOf('magnet') >= 0) {
-          let result = null;
-          let data = payload.data;
-
-          //battery status
-          if (data.voltage) {
-            let info = battery.info(data.voltage);
-            node.status(info.status);
-            persistent.voltage = info.voltage;
-            persistent.voltage_level = info.voltage_level;
-          }
-
-          if (node.output === '0') {
-            //raw data
-            result = payload;
-          } else if (node.output === '1') {
-            //only values
-            result = Object.assign({
-              status: null
-            }, persistent);
-
-            if (data.status) {
-              result.status = data.status;
-            }
-
-            result.time = new Date().getTime();
-            result.device = this.key;
-            result.sid = payload.sid;
-            result.model = payload.model;
-          } else if (node.output === '2') {
-            //template
-            if (data.status && data.status === 'open') {
-              result = mustache.render(node.openmsg, data);
-            } else {
-              result = mustache.render(node.closemsg, data);
-            }
-          }
-
-          msg.payload = result;
-          node.send([msg]);
-
-          //save previous state
-          if (result.status) {
-            persistent.previous_status = result.status;
-          }
-        }
-      });
-    } else {
-      node.status({fill: 'red', shape: 'ring', text: 'No gateway configured'});
-    }
+    //create the device
+    factory(RED, this, config);
   }
 
-  RED.nodes.registerType('xiaomi-window-door-sensor', XiaomiWindowDoorSensorNode);
+  RED.nodes.registerType('xiaomi-window-door-sensor', XiaomiWindowDoorSensor);
 };

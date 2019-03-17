@@ -1,81 +1,44 @@
-const battery = require('../../common/battery');
+const factory = require('../factory');
 
+/**
+ * @param {Red} RED
+ */
 module.exports = function (RED) {
-  'use strict';
 
-  function XiaomiWallSwitchNode(config) {
+  function XiaomiWallSwitch(config) {
+    //create the node-red node
     RED.nodes.createNode(this, config);
-    this.gateway = RED.nodes.getNode(config.gateway);
-    this.sid = config.sid;
-    this.key = config.key;
-    this.output = config.output;
-    this.outmsg = config.outmsg;
-    this.outmsgdbcl = config.outmsgdbcl;
 
-    let node = this;
-    let persistent = {
-      'voltage': null,
-      'voltage_level': null
+    let options = {};
+    switch (config.model) {
+      case 'wired_single_button':
+        options.persistence = ['channel_0'];
+        break;
+
+      case 'wired_double_button':
+        options.persistence = ['channel_0', 'channel_1'];
+        break;
+
+      default:
+        options.persistence = [];
+        break;
+    }
+
+    /**
+     * @param {object} device
+     * @param {object} payload
+     * @returns {void}
+     */
+    options._onInput = function (device, payload) {
+      console.log(payload, this.persistence);
+      if (payload.data.channel_0 === 'switch') {
+        payload.data.channel_0 = device.persistence['channel_0'] === 'on' ? 'off' : 'on';
+      }
     };
 
-    //initial status
-    node.status({fill: 'grey', shape: 'ring', text: 'battery'});
-
-    if (this.gateway) {
-      this.gateway.on('message', (input) => {
-        let msg = Object.assign({}, input);
-        let payload = msg.payload;
-
-        if (payload.sid === node.sid && (
-          payload.model.indexOf('ctrl_ln1') >= 0 ||
-          payload.model.indexOf('86sw1') >= 0 ||
-          payload.model.indexOf('ctrl_ln2') >= 0 ||
-          payload.model.indexOf('86sw2') >= 0)
-        ) {
-          let result = null;
-          let data = payload.data;
-
-          //battery status
-          if (data.voltage) {
-            let info = battery.info(data.voltage);
-            node.status(info.status);
-            persistent.voltage = info.voltage;
-            persistent.voltage_level = info.voltage_level;
-          }
-
-          if (node.output === '0') {
-            //raw data
-            result = payload;
-          } else if (node.output === '1') {
-            //only values
-            result = Object.assign({
-              channel_0: null,
-              channel_1: null,
-              device: null,
-              time: null
-            }, persistent);
-
-            if (data.channel_0) {
-              result.channel_0 = data.channel_0;
-            }
-            if (data.channel_1) {
-              result.channel_1 = data.channel_1;
-            }
-
-            result.time = new Date().getTime();
-            result.device = this.key;
-            result.sid = payload.sid;
-            result.model = payload.model;
-          }
-
-          msg.payload = result;
-          node.send([msg]);
-        }
-      });
-    } else {
-      node.status({fill: 'red', shape: 'ring', text: 'No gateway configured'});
-    }
+    //create the device
+    factory(RED, this, config, options);
   }
 
-  RED.nodes.registerType('xiaomi-wall-switch', XiaomiWallSwitchNode);
+  RED.nodes.registerType('xiaomi-wall-switch', XiaomiWallSwitch);
 };

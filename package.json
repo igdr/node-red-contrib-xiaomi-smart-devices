@@ -32,5 +32,8 @@
   "dependencies": {
     "mustache": "^2.3.0",
     "dgram": "^1.0.1"
+  },
+  "devDependencies": {
+    "@types/node-red": "^0.17.3"
   }
 }
