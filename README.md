@@ -12,6 +12,7 @@ The following devices are currently supported:
 * Window-Door Sensor
 * Switch (Button)
 * Wall Switch (one key, two keys, wired, wireless)
+* Smoke detector (Honeywell)
 
 # Installation
 To install this module use Node-Red GUI installer or console command:
