@@ -21,7 +21,8 @@
       "xiaomi-window-door-sensor": "devices/window-door-sensor/window-door-sensor.js",
       "xiaomi-water-sensor": "devices/water-sensor/water-sensor.js",
       "xiaomi-switch": "devices/switch/switch.js",
-      "xiaomi-wall-switch": "devices/wall-switch/wall-switch.js"
+      "xiaomi-wall-switch": "devices/wall-switch/wall-switch.js",
+      "xiaomi-smoke-detector": "devices/smoke-detector/smoke-detector.js"
     }
   },
   "author": "Igor Drozd",
