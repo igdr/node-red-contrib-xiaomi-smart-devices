@@ -29,8 +29,10 @@ module.exports = function (RED) {
           payload.model.indexOf('ctrl_ln1') >= 0 ||
           payload.model.indexOf('86sw1') >= 0 ||
           payload.model.indexOf('ctrl_ln2') >= 0 ||
-          payload.model.indexOf('86sw2') >= 0)
-        ) {
+          payload.model.indexOf('86sw2') >= 0 ||
+          payload.model.indexOf('remote.b186acn01') >= 0 ||
+          payload.model.indexOf('remote.b286acn01') >= 0)
+      ) {
           let result = null;
           let data = payload.data;
 
