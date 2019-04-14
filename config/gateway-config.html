@@ -12,6 +12,9 @@
       return this.name || "xiaomi-gateway-config";
     },
     oneditprepare: function () {
+      $('#node-input-port').val(node.port);
+      $('#node-input-address').val(node.address);
+
       let deviceInput = $("#node-config-input-devices");
       let byDefault = 'temperature-humidity-sensor';
       let types = [{
@@ -117,7 +120,9 @@
         devicesArray.push(d);
       });
       node.deviceList = devicesArray;
-      console.log(node.deviceList);
+
+      node.port = $("#node-input-port").val();
+      node.address = $("#node-input-address").val();
     }
   });
 </script>
