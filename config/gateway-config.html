@@ -4,14 +4,16 @@
     defaults: {
       name: {value: ""},
       deviceList: {value: [{sid: "", desc: "", model: ""}]},
-      address: {value: '224.0.0.50'},
-      port: {value: '9898'},
-      key: {value: ''},
+      address: {value: ""},
+      port: {value: ""},
+      key: {value: ""},
     },
     label: function () {
       return this.name || "xiaomi-gateway-config";
     },
     oneditprepare: function () {
+      var node = this;
+
       $('#node-input-port').val(node.port);
       $('#node-input-address').val(node.address);
 
