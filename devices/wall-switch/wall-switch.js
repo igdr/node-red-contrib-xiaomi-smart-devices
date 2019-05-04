@@ -30,7 +30,6 @@ module.exports = function (RED) {
      * @returns {void}
      */
     options._onInput = function (device, payload) {
-      console.log(payload, this.persistence);
       if (payload.data.channel_0 === 'switch') {
         payload.data.channel_0 = device.persistence['channel_0'] === 'on' ? 'off' : 'on';
       }

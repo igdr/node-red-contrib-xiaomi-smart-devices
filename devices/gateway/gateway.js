@@ -24,14 +24,13 @@ module.exports = function (RED) {
 
         switch (payload.cmd) {
           case 'heartbeat' :
-            this.status({fill: 'green', shape: 'ring', text: 'connected'});
+            this.status({fill: 'green', shape: 'ring', text: 'connected, sid: ' + payload.sid});
 
             clearTimeout(this.timer);
             this.timer = setTimeout(() => {
               this.status({fill: 'grey', shape: 'ring', text: 'not connected'});
             }, this.healthcheck);
             break;
-
 
           default:
             this.send([msg]);

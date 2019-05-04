@@ -62,9 +62,8 @@
     <p>The Xiaomi Wall Switch node</p>
 
     <h3>Details</h3>
-    <p>The incoming json message is parsed if the type model is <code>ctrl_ln1</code> or <code>86sw1</code> and
-     the <code>sid</code> matches the configured value for this device.</p>
-    <p>Four models are supported:
+    <p>The incoming json message is parsed the <code>sid</code> matches the configured value for this device.</p>
+    <p>Two modes are supported:
         <ul>
             <li>Full data</li>
             <li>Just values</li>
@@ -73,10 +72,18 @@
 
     <h3>Inputs</h3>
     <dl class="message-properties">
-        <dt>payload
-            <span class="property-type">json</span>
-        </dt>
-        <dd>Gateway <code>switch</code> message of type <code>read_ack</code>, <code>heartbeat</code> or <code>report</code></dd>
+        <dt>payload.channel_0 <span class="property-type">string</span></dt>
+        <dd>
+            <code>on</code> - if you want to turn on<br/>
+            <code>off</code> - turn off<br/>
+            <code>switch</code> - change state on -> off, off -> on<br/>
+        </dd>
+        <dt>payload.channel_1 <span class="property-type">string</span></dt>
+        <dd>
+            <code>on</code> - if you want to turn on<br/>
+            <code>off</code> - turn off<br/>
+            <code>switch</code> - change state on -> off, off -> on<br/>
+        </dd>
     </dl>
 
     <h3>Outputs</h3>

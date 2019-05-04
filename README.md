@@ -22,5 +22,4 @@ npm i node-red-contrib-xiaomi-smart-devices
 
 # Example
 
-
 ![Example](example.png)

@@ -22,22 +22,30 @@ function createMessage(message, rinfo) {
 }
 
 /**
+ * @param {Object} node
  * @param {string} key
  * @param {Object} msg
  * @returns {String}
  */
-function getGatewayToken(key, msg) {
+function getGatewayToken(node, key, msg) {
   let result = null;
 
   //get gateway key
   if (key) {
     let token = msg.payload.token;
     if (token) {
-      let cipher = crypto.createCipheriv('aes128', key, (new Buffer('17996d093d28ddb3ba695a2e6f58562e', 'hex')));
-      let encoded_string = cipher.update(token, 'utf8', 'hex');
+      try {
+        let cipher = crypto.createCipheriv('aes128', key, (new Buffer('17996d093d28ddb3ba695a2e6f58562e', 'hex')));
+        let encoded_string = cipher.update(token, 'utf8', 'hex');
 
-      encoded_string += cipher.final('hex');
-      result = encoded_string.substring(0, 32);
+        encoded_string += cipher.final('hex');
+        result = encoded_string.substring(0, 32);
+      } catch (e) {
+        //initial status
+        node.error(e.message);
+        result = null;
+      }
+
     }
   }
 
@@ -90,16 +98,20 @@ module.exports = function (RED) {
     }
 
     socket.on('listening', () => {
-      if (false === reuse) {
-        socket.addMembership(this.address);
+      try {
+        if (false === reuse) {
+          socket.addMembership(this.address);
+        }
+
+        //debug
+        const address = socket.address();
+        this.log(`UDP socket listening on ${address.address}:${address.port}`);
+
+        //initial status
+        this.status({fill: 'grey', shape: 'ring', text: 'connected'});
+      } catch (e) {
+        this.status({fill: 'red', shape: 'ring', text: 'connection error'});
       }
-
-      //debug
-      const address = socket.address();
-      this.log(`UDP socket listening on ${address.address}:${address.port}`);
-
-      //initial status
-      this.status({fill: 'grey', shape: 'ring', text: 'connected'});
     });
 
     socket.on('message', (message, rinfo) => {
@@ -107,7 +119,7 @@ module.exports = function (RED) {
 
       if (msg.payload.token) {
         //update token
-        this.currentToken = getGatewayToken(this.key, msg);
+        this.currentToken = getGatewayToken(this, this.key, msg);
 
         if (false === this.ready) {
           this.emit('ready');

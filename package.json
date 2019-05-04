@@ -15,6 +15,7 @@
     "nodes": {
       "xiaomi-gateway-config": "config/gateway-config.js",
       "xiaomi-gateway": "devices/gateway/gateway.js",
+      "xiaomi-gateway-utils": "devices/gateway-utils/gateway-utils.js",
       "xiaomi-human-body-sensor": "devices/human-body-sensor/human-body-sensor.js",
       "xiaomi-temperature-humidity-sensor": "devices/temperature-humidity-sensor/temperature-humidity-sensor.js",
       "xiaomi-magic-cube-controller": "devices/magic-cube-controller/magic-cube-controller.js",
