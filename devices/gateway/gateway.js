@@ -92,16 +92,20 @@ module.exports = function (RED) {
       }
 
       socket.on('listening', () => {
-        if (false === reuse) {
-          socket.addMembership(this.gateway.address);
+        try {
+          if (false === reuse) {
+            socket.addMembership(this.gateway.address);
+          }
+
+          //debug
+          const address = socket.address();
+          this.log(`UDP socket listening on ${address.address}:${address.port}`);
+
+          //initial status
+          this.status({fill: 'green', shape: 'ring', text: 'connected'});
+        } catch (e) {
+          this.status({fill: 'red', shape: 'ring', text: 'Connection error'});
         }
-
-        //debug
-        const address = socket.address();
-        this.log(`UDP socket listening on ${address.address}:${address.port}`);
-
-        //initial status
-        this.status({fill: 'green', shape: 'ring', text: 'connected'});
       });
 
       socket.on('message', (message, rinfo) => {
