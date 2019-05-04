@@ -6,10 +6,7 @@
       gateway: {value: "", type: "xiaomi-gateway-config"},
       name: {value: ""},
       key: {value: "", required: true},
-      sid: {value: "", required: true},
-      output: {value: "1"},
-      outmsg: {value: "{{click}}"},
-      outmsgdbcl: {value: "{{double_click}}"},
+      sid: {value: "", required: true}
     },
     inputs: 0,
     outputs: 1,
@@ -38,46 +35,31 @@
         <label for="node-input-key"><i class="icon-tag"></i> Device</label>
         <input type="text" id="node-input-key" placeholder="Device Key/Name"></text>
     </div>
-    <div class="form-row">
-        <label for="node-input-output"><i class="icon-tag"></i> Output</label>
-        <select id="node-input-output" style="width:70%;">
-            <option value="0">Full data</option>
-            <option value="1">Just values</option>
-        </select>
-    </div>
 </script>
 
 <script type="text/x-red" data-help-name="xiaomi-switch">
-    <p>The Xiaomi Button node</p>
+<p>The Xiaomi Button node</p>
 
-    <h3>Details</h3>
-    <p>The incoming json message is parsed if the type model is <code>switch</code> and
-     the <code>sid</code> matches the configured value for this device.</p>
-    <p>Three output types are supported:
-        <ul>
-            <li>Full data</li>
-            <li>Just values</li>
-        </ul>
-    </p>
+<h3>Details</h3>
+<p>The incoming json message is parsed if the <code>sid</code> matches the configured value for this device.</p>
 
-    <h3>Outputs</h3>
-    <h4>Full data</h4>
-    <p>Passes the complete json object received from the gateway on output 1. Use this if you need the raw data.</p>
-    <h4>Just values</h4>
-    <p>Only passes the string values <code>single_click</code> on output 1 and <code>double_click</code> on output 2.</p>
+<h3>Outputs</h3>
 
-    <p>Sample message:</p>
-    <p><pre>
-    {
-        cmd: "report"
-        model: "switch"
-        sid: "158d000128b124"
-        short_id: 56773
-        data: {
-            "status":"click"
-            "voltage": 3000,
-            "voltage_level": "high"
-        }
-    }</pre></p>
-
+<p>Sample message `Click`:</p>
+<p>
+<pre>
+{
+   "fromip":"192.168.0.110:4321",
+   "ip":"192.168.0.110",
+   "port":4321,
+   "payload":{
+      "status":"click",
+      "time":1556989371213,
+      "device":"btn_room_1",
+      "sid":"158d00016c47ba",
+      "model":"sensor_switch.aq2"
+   }
+}
+</pre>
+</p>
 </script>

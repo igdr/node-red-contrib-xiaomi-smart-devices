@@ -6,10 +6,7 @@
       gateway: {value: '', type: 'xiaomi-gateway-config'},
       name: {value: ''},
       sid: {value: '', required: true},
-      key: {value: "", required: true},
-      motionmsg: {value: ''},
-      nomotionmsg: {value: ''},
-      output: {value: '1'}
+      key: {value: "", required: true}
     },
     inputs: 0,
     outputs: 1,
@@ -38,43 +35,52 @@
         <label for="node-input-key"><i class="icon-tag"></i> Device</label>
         <input type="text" id="node-input-key" placeholder="Device Key/Name"></text>
     </div>
-    <div class="form-row">
-        <label for="node-input-output"><i class="icon-tag"></i> Output</label>
-        <select id="node-input-output" style="width:70%;">
-            <option value="0">Full data</option>
-            <option value="1">Just values</option>
-        </select>
-    </div>
 </script>
 
 <script type="text/x-red" data-help-name="xiaomi-human-body-sensor">
-    <p>The Xiaomi Human Body Sensor node</p>
+<p>The Xiaomi Human Body Sensor node</p>
 
-    <h3>Details</h3>
-    <p>The incoming json message is parsed if the type model is <code>human-body-sensor</code> and the <code>sid</code> matches the configured value for this device.</p>
-    <p>Three output types are supported for output 1:
-        <ul>
-            <li>Full data</li>
-            <li>Just values</li>
-        </ul>
-    </p>
+<h3>Details</h3>
+<p>The incoming json message is parsed if the type model is <code>human-body-sensor</code> and the <code>sid</code> matches the configured value for this device.</p>
 
-    <h3>Outputs</h3>
-    <h4>Full data</h4>
-    <p>Passes the complete json object received from the gateway. Use this if you need the raw data.</p>
-    <h4>Just values</h4>
-    <p>Only passes the values <code>motion</code> or <code>no_motion</code>. In case of <code>no_motion</code> also the duration object is passed on output 2.</p>
+<h3>Outputs</h3>
 
-    <p>Sample message:</p>
-    <p><pre>
-    {
-        cmd: "read_ack"
-        model: "human-body-sensor"
-        sid: "158d00015ef56c"
-        short_id: 21672
-        data: {
-            "voltage":3035,
-            "status":"motion"
-        }
-    }</pre></p>
+<p>Sample message if there is some motion:</p>
+<p>
+<pre>
+{
+   "fromip":"192.168.0.110:4321",
+   "ip":"192.168.0.110",
+   "port":4321,
+   "payload":{
+      "status":"motion",
+      "lux":2,
+      "time":1556988708585,
+      "device":"motion_room_1",
+      "sid":"158d0001a24d0a",
+      "model":"sensor_motion.aq2"
+   }
+}
+</pre>
+</p>
+
+<p>Sample message if no motion:</p>
+<p>
+<pre>
+{
+   "fromip":"192.168.0.110:4321",
+   "ip":"192.168.0.110",
+   "port":4321,
+   "payload":{
+      "status":"no_motion",
+      "duration":"120",
+      "lux":2,
+      "time":1556988839656,
+      "device":"motion_room_1",
+      "sid":"158d0001a24d0a",
+      "model":"sensor_motion.aq2"
+   }
+}
+</pre>
+</p>
 </script>

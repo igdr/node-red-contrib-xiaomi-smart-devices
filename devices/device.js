@@ -12,7 +12,6 @@ function Device(gateway, node, config, options) {
   this.node.gateway = gateway;
   this.node.sid = config.sid;
   this.node.key = config.key;
-  this.node.output = config.output;
   this.node.model = null;
   this.options = options;
   this.fields = options.persistence || [];

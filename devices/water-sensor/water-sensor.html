@@ -6,10 +6,7 @@
       gateway: {value: "", type: "xiaomi-gateway-config"},
       name: {value: ""},
       sid: {value: "", required: true},
-      key: {value: "", required: true},
-      openmsg: {value: ""},
-      closemsg: {value: ""},
-      output: {value: "1"}
+      key: {value: "", required: true}
     },
     inputs: 0,
     outputs: 1,
@@ -39,13 +36,6 @@
         <label for="node-input-key"><i class="icon-tag"></i> Device</label>
         <input type="text" id="node-input-key" placeholder="Device Key/Name"></text>
     </div>
-    <div class="form-row">
-        <label for="node-input-output"><i class="icon-tag"></i> Output</label>
-        <select id="node-input-output" style="width:70%;">
-            <option value="0">Full data</option>
-            <option value="1">Just values</option>
-        </select>
-    </div>
 </script>
 
 <script type="text/x-red" data-help-name="xiaomi-water-sensor">
@@ -64,17 +54,6 @@
     <h3>Details</h3>
     <p>The incoming json message is parsed if the type model is <code>water-sensor</code> and
      the <code>sid</code> matches the configured value for this device.</p>
-    <p>Three output types are supported:
-        <ul>
-            <li>Full data</li>
-            <li>Just values</li>
-        </ul>
-    </p>
-
-    <h4>Full data</h4>
-    <p>Passes the complete json object received from the gateway. Use this if you need the raw data.</p>
-    <h4>Just values</h4>
-    <p>Only passes the sting values <code>open</code> or <code>close</code>.</p>
 
     <p>Sample message:</p>
     <p><pre>

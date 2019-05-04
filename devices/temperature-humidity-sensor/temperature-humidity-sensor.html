@@ -6,8 +6,7 @@
       gateway: {value: "", type: "xiaomi-gateway-config"},
       name: {value: ""},
       sid: {value: "", required: true},
-      key: {value: "", required: true},
-      output: {value: "1"}
+      key: {value: "", required: true}
     },
     inputs: 0,
     outputs: 1,
@@ -36,57 +35,33 @@
         <label for="node-input-key"><i class="icon-tag"></i> Device</label>
         <input type="text" id="node-input-key" placeholder="Device Key/Name"></text>
     </div>
-    <div class="form-row">
-        <label for="node-input-output"><i class="icon-tag"></i> Output</label>
-        <select id="node-input-output" style="width:70%;">
-            <option value="0">Full data</option>
-            <option value="1">Just values</option>
-        </select>
-    </div>
-
-
 </script>
 
 <script type="text/x-red" data-help-name="xiaomi-temperature-humidity-sensor">
-    <p>The Xiaomi Temperature & Humidity sensor node</p>
+<p>The Xiaomi Temperature & Humidity sensor node</p>
 
-    <h3>Details</h3>
-    <p>The incoming json message is parsed if the type model is <code>temperature-humidity-sensor</code> and the <code>sid</code> matches the configured value for this device.</p>
-    <p>Three output types are supported:
-        <ul>
-            <li>Full data</li>
-            <li>Just values</li>
-        </ul>
-    </p>
+<h3>Details</h3>
+<p>The incoming json message is parsed if the <code>sid</code> matches the configured value for this device.</p>
 
-    <h3>Inputs</h3>
-    <dl class="message-properties">
-        <dt>payload
-            <span class="property-type">json</span>
-        </dt>
-        <dd>Gateway <code>sensor_ht</code> message of type <code>read_ack</code>, <code>heartbeat</code> or <code>report</code></dd>
-    </dl>
+<h3>Outputs</h3>
 
-    <h3>Outputs</h3>
-    <h4>Full data</h4>
-    <p>Passes the complete json object received from the gateway on output 1. Use this if you need the raw data.</p>
-
-    <h4>Just values</h4>
-    <p>Only passes the data object with values (temperature, humidity, voltage, voltage_level, pressure) on output 1.</p>
-
-    <p>Sample message:</p>
-    <p><pre>
-    {
-        cmd: "read_ack"
-        model: "temperature-humidity-sensor"
-        sid: "158d00010b7f1b"
-        short_id: 8451
-        data: "{
-                    "voltage":3005,
-                    "temperature":"2325",
-                    "humidity":"5699"
-               }"
-    }</pre></p>
-
-
+<p>Sample message:</p>
+<p>
+<pre>
+{
+   "fromip":"192.168.0.110:9898",
+   "ip":"192.168.0.110",
+   "port":9898,
+   "payload":{
+      "voltage":2885,
+      "temperature":19.78,
+      "humidity":55,
+      "pressure":"98040",
+      "time":1556988387475,
+      "sid":"158d000171f292",
+      "model":"weather.v1"
+   }
+}
+</pre>
+</p>
 </script>

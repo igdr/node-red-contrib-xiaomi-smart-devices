@@ -59,53 +59,66 @@
 </script>
 
 <script type="text/x-red" data-help-name="xiaomi-wall-switch">
-    <p>The Xiaomi Wall Switch node</p>
+<p>The Xiaomi Wall Switch node</p>
 
-    <h3>Details</h3>
-    <p>The incoming json message is parsed the <code>sid</code> matches the configured value for this device.</p>
-    <p>Two modes are supported:
-        <ul>
-            <li>Full data</li>
-            <li>Just values</li>
-        </ul>
-    </p>
+<h3>Details</h3>
+<p>The incoming json message is parsed the <code>sid</code> matches the configured value for this device.</p>
+<h4>Supported types</h4>
+<ul>
+    <li>Wired: Single-Button</li>
+    <li>Wired: Double-Buttons</li>
+    <li>Wireless Single-Button</li>
+    <li>Wireless Double-Button</li>
+</ul>
 
-    <h3>Inputs</h3>
-    <dl class="message-properties">
-        <dt>payload.channel_0 <span class="property-type">string</span></dt>
-        <dd>
-            <code>on</code> - if you want to turn on<br/>
-            <code>off</code> - turn off<br/>
-            <code>switch</code> - change state on -> off, off -> on<br/>
-        </dd>
-        <dt>payload.channel_1 <span class="property-type">string</span></dt>
-        <dd>
-            <code>on</code> - if you want to turn on<br/>
-            <code>off</code> - turn off<br/>
-            <code>switch</code> - change state on -> off, off -> on<br/>
-        </dd>
-    </dl>
+<h3>Inputs</h3>
+<dl class="message-properties">
+    <dt>payload.channel_0 <span class="property-type">string</span></dt>
+    <dd>
+        <code>on</code> - if you want to turn on<br/>
+        <code>off</code> - turn off<br/>
+        <code>switch</code> - change state on -> off, off -> on<br/>
+    </dd>
+    <dt>payload.channel_1 <span class="property-type">string</span></dt>
+    <dd>
+        <code>on</code> - if you want to turn on<br/>
+        <code>off</code> - turn off<br/>
+        <code>switch</code> - change state on -> off, off -> on<br/>
+    </dd>
+</dl>
 
-    <h3>Outputs</h3>
-    <h4>Full data</h4>
-    <p>Passes the complete json object received from the gateway on output 1. Use this if you need the raw data.</p>
-    <h4>Just values</h4>
-    <p>Only passes the string values <code>single_click</code> on output 1 and <code>double_click</code> on output 2.</p>
+<h3>Outputs</h3>
+<p>Passes the complete json object received from the node to the output</p>
 
-    <p>Sample message:</p>
-    <p><pre>
-    {
-        cmd: "report"
-        model: "wall-switch"
-        sid: "158d000128b124"
-        short_id: 56773
-        data: {
-            "status":"channel_0"
-            "voltage": 3000,
-            "voltage_level": "high"
-        }
-    }</pre></p>
+<p>Sample message of Wired Single-Button:</p>
+<p><pre>
+{
+   "fromip":"192.168.0.110:4321",
+   "ip":"192.168.0.110",
+   "port":4321,
+   "payload":{
+      "channel_0":"on",
+      "time":1556987229523,
+      "sid":"158d000128f9dd",
+      "model":"ctrl_ln1"
+   }
+}</pre>
+</p>
 
-
-
+<p>Sample message of Wireless Double-Buttons:</p>
+<p>
+<pre>
+{
+   "fromip":"192.168.0.110:4321",
+   "ip":"192.168.0.110",
+   "port":4321,
+   "payload":{
+      "channel_1":"click",
+      "time":1556987769175,
+      "sid":"158d000242275f",
+      "model":"86sw2"
+   }
+}
+</pre>
+</p>
 </script>

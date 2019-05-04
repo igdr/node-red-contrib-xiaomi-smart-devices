@@ -6,8 +6,7 @@
       gateway: {value: "", type: "xiaomi-gateway-config"},
       name: {value: ""},
       sid: {value: "", required: true},
-      key: {value: "", required: true},
-      output: {value: "1"}
+      key: {value: "", required: true}
     },
     inputs: 0,
     outputs: 1,
@@ -36,13 +35,6 @@
         <label for="node-input-key"><i class="icon-tag"></i> Device</label>
         <input type="text" id="node-input-key" placeholder="Device Key/Name"></text>
     </div>
-    <div class="form-row">
-        <label for="node-input-output"><i class="icon-tag"></i> Output</label>
-        <select id="node-input-output" style="width:70%;">
-            <option value="0">Full data</option>
-            <option value="1">Just values</option>
-        </select>
-    </div>
 </script>
 
 <script type="text/x-red" data-help-name="generic-device">
@@ -51,12 +43,6 @@
     <h3>Details</h3>
     <p>This generic node with is applicaple for any device type</p>
     <p>The incoming json message is parsed when the <code>sid</code> matches the configured value for this device.</p>
-    <p>Three output types are supported for output 1:
-        <ul>
-            <li>Full data</li>
-            <li>Just values</li>
-        </ul>
-    </p>
 
     <h3>Inputs</h3>
     <dl class="message-properties">
@@ -64,10 +50,6 @@
     </dl>
 
     <h3>Outputs</h3>
-    <h4>Full data</h4>
-    <p>Passes the complete json object received from the gateway. Use this if you need the raw data.</p>
-    <h4>Just values</h4>
-    <p>Only passes the values <code>status</code></p>
 
     <p>Sample message:</p>
     <p><pre>
