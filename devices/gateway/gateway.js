@@ -25,22 +25,30 @@ function createMessage(message, rinfo) {
 }
 
 /**
+ * @param {Object} node
  * @param {string} key
  * @param {Object} msg
  * @returns {String}
  */
-function getGatewayToken(key, msg) {
+function getGatewayToken(node, key, msg) {
   let result = null;
 
   //get gateway key
   if (key) {
     let token = msg.payload.token;
     if (token) {
-      let cipher = crypto.createCipheriv('aes128', key, (new Buffer('17996d093d28ddb3ba695a2e6f58562e', 'hex')));
-      let encoded_string = cipher.update(token, 'utf8', 'hex');
+      try {
+        let cipher = crypto.createCipheriv('aes128', key, (new Buffer('17996d093d28ddb3ba695a2e6f58562e', 'hex')));
+        let encoded_string = cipher.update(token, 'utf8', 'hex');
 
-      encoded_string += cipher.final('hex');
-      result = encoded_string.substring(0, 32);
+        encoded_string += cipher.final('hex');
+        result = encoded_string.substring(0, 32);
+      } catch (e) {
+        //initial status
+        node.error(e.message);
+        result = null;
+      }
+
     }
   }
 
@@ -101,7 +109,7 @@ module.exports = function (RED) {
 
         if (msg.payload.cmd == 'heartbeat' && msg.payload.model == 'gateway') {
           //get token
-          currentToken = getGatewayToken(this.gateway.key, msg);
+          currentToken = getGatewayToken(this, this.gateway.key, msg);
 
           //healthcheck
           this.status({fill: 'green', shape: 'ring', text: 'connected'});
