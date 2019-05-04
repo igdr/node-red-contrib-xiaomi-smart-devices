@@ -3,12 +3,20 @@
     category: 'config',
     defaults: {
       name: {value: ""},
-      address: {value: '224.0.0.50'},
-      port: {value: '9898'},
-      key: {value: ''},
+      address: {value: ""},
+      port: {value: ""},
+      key: {value: ""},
     },
     label: function () {
       return this.name || "xiaomi-gateway-config";
+    },
+    oneditprepare: function () {
+      $('#node-input-port').val(this.port);
+      $('#node-input-address').val(this.address);
+    },
+    oneditsave: function () {
+      this.port = $("#node-input-port").val();
+      this.address = $("#node-input-address").val();
     }
   });
 </script>
@@ -30,21 +38,22 @@
         <label for="node-input-port"><i class="fa fa-tag"></i> Port</label>
         <input type="text" id="node-input-port" placeholder="Port">
     </div>
+
 </script>
 
 <script type="text/x-red" data-help-name="xiaomi-gateway-config">
-    <p>Xiaomi Gateway Config node</p>
-    <h3>Details</h3>
-    <p>This configuration node is used by the Xiaomi device nodes.</p>
-    <p>At the moment the following devices are supported:
-    <lu>
-        <li>Humidity & Temperature sensor</li>
-        <li>Body Motion Sensor</li>
-        <li>Magic Cube Controller</li>
-        <li>Water Leak Sensor</li>
-        <li>Window-Door sensor</li>
-        <li>Switch (button)</li>
-        <li>Wall switch</li>
-    </lu>
-    </p>
+<p>Xiaomi Gateway Config node</p>
+<h3>Details</h3>
+<p>This configuration node is used by the Xiaomi device nodes.</p>
+<p>At the moment the following devices are supported:
+<lu>
+    <li>Humidity & Temperature sensor</li>
+    <li>Body Motion Sensor</li>
+    <li>Magic Cube Controller</li>
+    <li>Water Leak Sensor</li>
+    <li>Window-Door sensor</li>
+    <li>Switch (button)</li>
+    <li>Wall switch</li>
+</lu>
+</p>
 </script>
