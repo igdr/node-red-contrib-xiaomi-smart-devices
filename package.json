@@ -31,10 +31,9 @@
     "url": "https://github.com/igdr/node-red-contrib-xiaomi-smart-devices/issues"
   },
   "dependencies": {
-    "mustache": "^2.3.0",
     "dgram": "^1.0.1"
   },
   "devDependencies": {
-    "@types/node-red": "^0.17.3"
+    "@types/node-red": "^0.20.0"
   }
 }
