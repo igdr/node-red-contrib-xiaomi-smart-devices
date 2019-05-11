@@ -23,6 +23,7 @@
       "xiaomi-water-sensor": "devices/water-sensor/water-sensor.js",
       "xiaomi-switch": "devices/switch/switch.js",
       "xiaomi-wall-switch": "devices/wall-switch/wall-switch.js",
+      "xiaomi-smoke-detector": "devices/smoke-detector/smoke-detector.js",
       "xiaomi-generic-device": "devices/generic-device/generic-device.js"
     }
   },

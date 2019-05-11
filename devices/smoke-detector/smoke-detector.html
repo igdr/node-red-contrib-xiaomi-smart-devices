@@ -1,0 +1,114 @@
+<script type="text/javascript">
+  RED.nodes.registerType('xiaomi-smoke-detector', {
+    category: 'xiaomi',
+    color: 'rgb(192, 222, 237)',
+    defaults: {
+      gateway: {value: "", type: "xiaomi-gateway-config"},
+      name: {value: ""},
+      sid: {value: "", required: true},
+      key: {value: "", required: true}
+    },
+    inputs: 1,
+    outputs: 1,
+    outputLabels: ["Status"],
+    paletteLabel: "smoke",
+    icon: "smoke-detector.png",
+    label: function () {
+      return this.name || "Xiaomi Smoke Detector";
+    }
+  });
+</script>
+
+<script type="text/x-red" data-template-name="xiaomi-smoke-detector">
+    <div class="form-row">
+        <label for="node-input-gateway"><i class="icon-tag"></i> Gateway</label>
+        <input type="text" id="node-input-gateway" placeholder="xiaomi gateway">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-sid"><i class="icon-tag"></i> Device</label>
+        <select id="node-input-sid" placeholder="xiaomi gateway"></select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-output"><i class="icon-tag"></i> Output</label>
+        <select id="node-input-output" style="width:70%;">
+            <option value="0">Full data</option>
+            <option value="1">Just values</option>
+            <option value="2">Template</option>
+        </select>
+    </div>
+    <div class="form-row node-input-msg">
+        <label for="node-input-openmsg"><i class="fa fa-circle-o-notch"></i> Open msg</label>
+        <input type="text" id="node-input-openmsg">
+    </div>
+    <div class="form-row node-input-msg">
+        <label for="node-input-closemsg"><i class="fa fa-circle-o"></i> Close msg</label>
+        <input type="text" id="node-input-closemsg">
+    </div>
+
+</script>
+
+<script type="text/x-red" data-template-name="xiaomi-smoke-detector">
+    <div class="form-row">
+        <label for="node-input-gateway"><i class="icon-tag"></i> Gateway</label>
+        <input type="text" id="node-input-gateway" placeholder="xiaomi gateway">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-sid"><i class="icon-tag"></i> SID</label>
+        <input type="text" id="node-input-sid" placeholder="SID"></input>
+    </div>
+    <div class="form-row">
+        <label for="node-input-key"><i class="icon-tag"></i> Device</label>
+        <input type="text" id="node-input-key" placeholder="Device Key/Name"></text>
+    </div>
+
+</script>
+
+<script type="text/x-red" data-help-name="xiaomi-smoke-detector">
+<p>The Xiaomi Smoke Detector (Beta)</p>
+
+<h3>Details</h3>
+<p>The incoming json message is parsed if the <code>sid</code> matches the configured value for this device.</p>
+
+<h3>Outputs</h3>
+
+<p>Sample message:</p>
+<p>
+<pre>
+{
+   "fromip":"192.168.0.110:4321",
+   "ip":"192.168.0.110",
+   "port":4321,
+   "payload":{
+      "alarm" : 0,
+      "density" : 0,
+      "status" : "unknown",
+      "time":1556989155457,
+      "device":"smoke_detector",
+      "sid":"158d0001107eb2",
+      "model":"smoke"
+   }
+}
+</pre>
+</p>
+<br>
+Notes
+<ul>
+  <li>Alarm values are not all discovered. So far 0  = standby, 2  = alarm and 8 = low battery</li>
+  <li>Status is set according to (known) alarm values</li>
+  <li>The voltage does not seem to change. During testing this stayed at 3.205 even though the provided voltage to the detector was much less.
+</ul>
+</p>
+
+<h4>Disclaimer</h4>
+<p>Be aware that this node was developed by reverse engineering the communication protocol of the smoke detector.
+We can not be held responsible for the incorrect working of the smoke-detector node. Make sure you have other ways that notify you when smoke is detected.
+</p>
+</script>
