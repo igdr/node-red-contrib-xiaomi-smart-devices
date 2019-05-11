@@ -17,7 +17,7 @@ The following devices are currently supported:
 To install this module use Node-Red GUI installer or console command:
 
 ```
-npm i node-red-contrib-xiaomi-smart-devices
+npm i node-red-contrib-xiaomi-smart-devices --save
 ```
 
 # Example
