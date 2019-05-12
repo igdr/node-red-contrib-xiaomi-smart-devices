@@ -15,7 +15,7 @@ function Device(gateway, node, config, options) {
   this.node.model = null;
   this.options = options;
   this.fields = options.persistence || [];
-  this.readAskInterval = 10000;
+  this.readAskInterval = 60000;
   this.battery = new Battery(this.node);
   this.ready = false;
   this.timer = null;

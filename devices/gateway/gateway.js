@@ -40,13 +40,13 @@ module.exports = function (RED) {
 
       //listen for incoming messages
       this.on('input', function (msg) {
-        msg.payload = {
+        let command = {
           sid: this.sid,
           cmd: 'write',
           model: 'gateway',
           data: msg.payload
         };
-        this.gateway.sendCommand(msg.payload);
+        this.gateway.sendCommand(command);
       });
     } else {
       //initial status
