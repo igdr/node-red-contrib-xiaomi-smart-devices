@@ -4,7 +4,6 @@
     color: 'rgb(192, 222, 237)',
     defaults: {
       gateway: {value: "", type: "xiaomi-gateway-config"},
-      sid: {value: '', required: true},
       name: {value: ''},
       healthcheck: {value: 60},
     },
@@ -28,40 +27,251 @@
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
     <div class="form-row">
-        <label for="node-input-sid"><i class="icon-tag"></i> SID</label>
-        <input type="text" id="node-input-sid" placeholder="SID"></input>
-    </div>
-    <div class="form-row">
         <label for="node-input-healthcheck"><i class="fa fa-clock-o"></i> Health check interval, sec</label>
         <input type="text" id="node-input-healthcheck" placeholder="60">
     </div>
+
 </script>
 
 <script type="text/x-red" data-help-name="xiaomi-gateway">
-    <p>The Xiaomi Gateway</p>
-
-    <h3>Details</h3>
-    <p>The node automatically connects to the Xiaomi Gateway via UPD protocol to the <code>address</code> and <code>port</code> which should be set in the node configuration</p>
-
-    <h3>Inputs</h3>
-    <dl class="message-properties">
-        <dt>Command to the Xiaomi Gateway <span class="property-type">json</span>, example: </dt>
-        <dd>
-            <pre>
+<p>The Xiaomi Gateway</p>
+<h3>Details</h3>
+<p>The node automatically connects to the Xiaomi Gateway via UPD protocol to the <code>address</code> and <code>port</code> which should be set in the node configuration</p>
+<h3>Inputs</h3>
+<dl class="message-properties">
+<p>Command to the Xiaomi Gateway <span class="property-type">json</span>:</p>
+<dt>Play sound:</dt>
+<dd>
+  <pre>
 {
-  "mid": 1,
-  "vol": 100
+  "payload": {
+    "mid": 1,
+    "vol": 27
+  }
 }
-            </pre>
-        </dd>
-    </dl>
+</pre>
 
-    <h3>Outputs</h3>
-    <p>Passes the complete json object received from the Xiaomi Gateway</p>
+<h4>Sounds: </h4>
+<p>
+  <table dir="ltr" border="1" cellspacing="0" cellpadding="5">
+     <tr style="background-color: #f0f0f0;">
+        <td><strong>Mid</strong></td>
+        <td><strong>Sound</strong></td>
+     </tr>
+     <tr>
+        <td>0</td>
+        <td>police car 1</td>
+     </tr>
+     <tr>
+        <td>1</td>
+        <td>police car 2</td>
+     </tr>
+     <tr>
+        <td>2</td>
+        <td>accident</td>
+     </tr>
+     <tr>
+        <td>3</td>
+        <td>countdown</td>
+     </tr>
+     <tr>
+        <td>4</td>
+        <td>ghost</td>
+     </tr>
+     <tr>
+        <td>5</td>
+        <td>sniper rifle</td>
+     </tr>
+     <tr>
+        <td>6</td>
+        <td>battle</td>
+     </tr>
+     <tr>
+        <td>7</td>
+        <td>air raid</td>
+     </tr>
+     <tr>
+        <td>8</td>
+        <td>bark</td>
+     </tr>
+     <tr>
+        <td>10</td>
+        <td>doorbell</td>
+     </tr>
+     <tr>
+        <td>11</td>
+        <td>knock at a door</td>
+     </tr>
+     <tr>
+        <td>12</td>
+        <td>amuse</td>
+     </tr>
+     <tr>
+        <td>13</td>
+        <td>alarm clock</td>
+     </tr>
+     <tr>
+        <td>20</td>
+        <td>mimix</td>
+     </tr>
+     <tr>
+        <td>12</td>
+        <td>enthusuastic</td>
+     </tr>
+     <tr>
+        <td>22</td>
+        <td>guitar classic</td>
+     </tr>
+     <tr>
+        <td>23</td>
+        <td>ice world piano</td>
+     </tr>
+     <tr>
+        <td>24</td>
+        <td>leisure time</td>
+     </tr>
+     <tr>
+        <td>25</td>
+        <td>child hood</td>
+     </tr>
+     <tr>
+        <td>28</td>
+        <td>morning stream liet</td>
+     </tr>
+     <tr>
+        <td>27</td>
+        <td>music box</td>
+     </tr>
+     <tr>
+        <td>28</td>
+        <td>orange</td>
+     </tr>
+     <tr>
+        <td>29</td>
+        <td>thinker</td>
+     </tr>
+  </table>
+</p>
+</dd>
+<dt>Change color:</dt>
+<dd>
+<pre>
+{
+  "payload": {
+    "rgb": 440038609
+  }
+}
+</pre>
 
-    <p>Sample message:</p>
-    <p>
-    <pre>
+<h4>Details: </h4>
+<p>
+ The msg.payload.rgb is an integer created from a HEX8 colour value. The colour is composed of 3 RGB channels with hexadecimal values plus alpha: AARRGGBB.
+ The problem is that Xiaomi Hub requires alpha to be passed at the end: RRGGBBAA.
+</p>
+<p>
+ Here are the steps to follow how to get correct value:
+<ul>
+<li>Obtain HEX8 colour value (use <a target="_blank" href="https://www.google.com/search?ei=ETIvXPGtKtGq1fAPjLsJ&q=color+picker&oq=color+picker">Google Colour Picker)</a></li>
+<li>Add an alpha channel to the end of the string from the list below</li>
+<li>Convert the value to an integer <a target="_blank" href="https://www.binaryhexconverter.com/hex-to-decimal-converter">(use this page)</a></li>
+<table dir="ltr" border="1" cellspacing="0" cellpadding="5">
+ <tr style="background-color: #f0f0f0;">
+    <td><strong>Alpha Level</strong></td>
+    <td><strong>HEX Code</strong></td>
+ </tr>
+ <tr>
+    <td>100%</td>
+    <td>FF</td>
+ </tr>
+ <tr>
+    <td>95%</td>
+    <td>F2</td>
+ </tr>
+ <tr>
+    <td>90%</td>
+    <td>E6</td>
+ </tr>
+ <tr>
+    <td>85%</td>
+    <td>D9</td>
+ </tr>
+ <tr>
+    <td>80%</td>
+    <td>CC</td>
+ </tr>
+ <tr>
+    <td>75%</td>
+    <td>BF</td>
+ </tr>
+ <tr>
+    <td>70%</td>
+    <td>B3</td>
+ </tr>
+ <tr>
+    <td>65%</td>
+    <td>A6</td>
+ </tr>
+ <tr>
+    <td>60%</td>
+    <td>99</td>
+ </tr>
+ <tr>
+    <td>55%</td>
+    <td>8C</td>
+ </tr>
+ <tr>
+    <td>50%</td>
+    <td>80</td>
+ </tr>
+ <tr>
+    <td>45%</td>
+    <td>73</td>
+ </tr>
+ <tr>
+    <td>40%</td>
+    <td>66</td>
+ </tr>
+ <tr>
+    <td>35%</td>
+    <td>59</td>
+ </tr>
+ <tr>
+    <td>30%</td>
+    <td>4D</td>
+ </tr>
+ <tr>
+    <td>25%</td>
+    <td>40</td>
+ </tr>
+ <tr>
+    <td>20%</td>
+    <td>33</td>
+ </tr>
+ <tr>
+    <td>15%</td>
+    <td>26</td>
+ </tr>
+ <tr>
+    <td>10%</td>
+    <td>1A</td>
+ </tr>
+ <tr>
+    <td>5%</td>
+    <td>0D</td>
+ </tr>
+ <tr>
+    <td>0%</td>
+    <td>00</td>
+ </tr>
+</table>
+</p>
+</dd>
+</dl>
+<h3>Outputs</h3>
+<p>Passes the complete json object received from the Xiaomi Gateway</p>
+<p>Sample message:</p>
+<p>
+<pre>
 {
    "fromip": "192.168.0.110:4321",
    "ip": "192.168.0.110",
@@ -77,14 +287,16 @@
    },
    "_msgid":"a8d6c233.9d439"
 }
-    </pre>
-    </p>
-
-    <p>To be able to receive messages from the Xiaomi gateway, you need to set the gateway
-    in developer mode. Once in developer mode, the gateway sends JSON messages over the network as
-    UDP packages. On the internet their are a lot of guides on how to put the gateway in developer mode.</p>
-    <p>If you want to control devices, you need to set the key from the gateway. The key can be
-    retrieved via the Xiaomi Home App when in developer mode. Enter the key here and it is used
-    together with the token from the gateway's heartbeat message to recalculate the key to switch
-    </p>
+</pre>
+</p>
+<p>To be able to receive messages from the Xiaomi gateway, you need to set the gateway
+   in developer mode. Once in developer mode, the gateway sends JSON messages over the network as
+   UDP packages. On the internet their are a lot of guides on how to put the gateway in developer mode.
+</p>
+<p>If you want to control devices, you need to set the key from the gateway. The key can be
+   retrieved via the Xiaomi Home App when in developer mode. Enter the key here and it is used
+   together with the token from the gateway's heartbeat message to recalculate the key to switch
+</p>
 </script>
+
+
