@@ -8,7 +8,7 @@ module.exports = function (RED) {
    */
   function XiaomiGatewayNode(config) {
     RED.nodes.createNode(this, config);
-    this.sid = config.sid;
+    this.sid = null;
     this.healthcheck = config.healthcheck * 1000 || 60000;
     this.timer = null;
 
@@ -24,6 +24,7 @@ module.exports = function (RED) {
 
         switch (payload.cmd) {
           case 'heartbeat' :
+            this.sid = payload.sid;
             this.status({fill: 'green', shape: 'ring', text: 'connected, sid: ' + payload.sid});
 
             clearTimeout(this.timer);
