@@ -61,7 +61,8 @@ module.exports = function (RED) {
     this.name = config.name;
     this.key = config.key;
     this.port = config.port || 9898;
-    this.address = config.address || '224.0.0.50';
+    this.address = config.address;
+    this.multicast = '224.0.0.50';
     this.currentToken = null;
     this.ready = false;
 
@@ -76,7 +77,7 @@ module.exports = function (RED) {
         cmd.data = JSON.stringify(cmd.data);
 
         const message = Buffer.from(JSON.stringify(cmd));
-        socket.send(message, 0, message.length, this.port, this.address, function () {
+        socket.send(message, 0, message.length, this.port, this.multicast, function () {
           console.info(`Sending message '${message}'`);
         });
       } else {
@@ -100,7 +101,7 @@ module.exports = function (RED) {
     socket.on('listening', () => {
       try {
         if (false === reuse) {
-          socket.addMembership(this.address);
+          socket.addMembership(this.multicast);
         }
 
         //debug
