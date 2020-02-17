@@ -89,7 +89,10 @@ module.exports = function (RED) {
     let socket;
     let reuse = false;
     if (!udpInputPortsInUse.hasOwnProperty(this.port)) {
-      socket = dgram.createSocket({type: 'udp4'});  // default to udp4
+      socket = dgram.createSocket({
+        type: 'udp4',
+        reuseAddr: true
+      });  // default to udp4
       socket.bind(this.port);
       udpInputPortsInUse[this.port] = socket;
     } else {
